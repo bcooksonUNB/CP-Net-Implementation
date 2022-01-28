@@ -1,0 +1,4 @@
+GetPrivateProfileStringW
+Attribute_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count
+CreateThread,22,6,16
+GlobalMemoryStatus,15,3,12

@@ -1,0 +1,9 @@
+LocalSize
+Attribute_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count
+OpenProcess,38,8,30
+Sleep,34,7,27
+CreateThread,34,4,30
+VirtualAlloc,34,8,26
+SetThreadPriority,38,8,30
+GetThreadPriority,36,7,29
+GlobalMemoryStatus,28,2,26

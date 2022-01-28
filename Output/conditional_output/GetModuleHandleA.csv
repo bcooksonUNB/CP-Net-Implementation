@@ -1,0 +1,4 @@
+GetModuleHandleA
+Attribute_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count
+RegNotifyChangeKeyValue,29,27,2
+RegOpenKeyW,34,26,8

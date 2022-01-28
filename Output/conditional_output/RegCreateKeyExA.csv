@@ -1,0 +1,4 @@
+RegCreateKeyExA
+Attribute_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count
+RegNotifyChangeKeyValue,59,45,14
+ReadFile,51,43,8

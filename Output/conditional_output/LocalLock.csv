@@ -1,0 +1,7 @@
+LocalLock
+Attribute_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count
+LocalSize,22,10,12
+CreateThread,19,6,13
+SetThreadPriority,27,13,14
+ReadFile,20,20,0
+GetThreadPriority,25,12,13

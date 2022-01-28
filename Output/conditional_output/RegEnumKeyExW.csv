@@ -1,0 +1,8 @@
+RegEnumKeyExW
+Attribute_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count
+LocalSize,17,6,11
+OpenProcess,22,8,14
+HeapReAlloc,22,8,14
+HeapSize,23,9,14
+ReadFile,18,18,0
+GetThreadPriority,19,7,12

@@ -1,0 +1,11 @@
+RegOpenKeyW
+Attribute_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count
+OpenProcess,60,14,46
+HeapReAlloc,70,33,37
+Sleep,56,18,38
+CreateThread,57,17,40
+VirtualAlloc,63,27,36
+SetThreadPriority,57,12,45
+HeapSize,73,29,44
+ReadFile,55,48,7
+GetCurrentProcess,81,38,43

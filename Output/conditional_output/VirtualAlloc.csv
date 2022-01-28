@@ -1,0 +1,12 @@
+VirtualAlloc
+Attribute_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count
+OpenProcess,50,14,36
+RegNotifyChangeKeyValue,60,27,33
+RegOpenKeyW,63,27,36
+HeapReAlloc,52,23,29
+Sleep,47,16,31
+CreateThread,52,16,36
+SetThreadPriority,46,10,36
+HeapSize,62,26,36
+GetThreadPriority,42,6,36
+GlobalMemoryStatus,46,11,35
