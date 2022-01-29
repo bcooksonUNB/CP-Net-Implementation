@@ -4,10 +4,10 @@ import itertools
 
 
 DEBUG = True
-MIN_SUPPORT = 0.8
-MAX_K = 5
+MIN_SUPPORT = 0.6
+MAX_K = 3
 
-file_name_list = os.listdir("csv-consec_identical_calls_removed")
+file_name_list = os.listdir("../Input")
 
 fileList = {}
 
@@ -60,7 +60,7 @@ def is_sequence_in_file(seq, file):
 
 counter = 0
 for name in file_name_list:
-    f = open("csv-consec_identical_calls_removed/" + name)
+    f = open("../Input/" + name)
     next_attribute = f.readline()
     l = []
     while next_attribute:
@@ -137,19 +137,25 @@ for i in mal_files:
 #generate sequences
 k = 2
 while True:
-    cands = gen_cands(litemSet[k-1],k)
-    cand_counts = {str(c): 0 for c in cands}
-    cand_list = {str(c): [] for c in cands}
-    for i in fileList:
-        print("Done adding to file " + str(i) + " for level " + str(k))
-        for c in cands:
-            if is_sequence_in_file(c, fileList[i]):
-                cand_counts[str(c)] += 1
-                cand_list[str(c)].append(i)
-    litemSet[k] = set(x for x in cands if cand_counts[str(x)] >= MIN_COUNT)
-    for item in litemSet[k]:
-        pattern_list[str(item)] = (cand_counts[str(item)], cand_list[str(item)])
-    print(litemSet[k])
-    if len(litemSet[k]) == 0 or k >= MAX_K:
-        break
-    k += 1
+	if k > MAX_K:
+		break
+	cands = gen_cands(litemSet[k-1],k)
+	cand_counts = {str(c): 0 for c in cands}
+	cand_list = {str(c): [] for c in cands}
+	for i in fileList:
+		print("Done adding to file " + str(i) + " for level " + str(k))
+		for c in cands:
+			if is_sequence_in_file(c, fileList[i]):
+				cand_counts[str(c)] += 1
+				cand_list[str(c)].append(i)
+	litemSet[k] = set(x for x in cands if cand_counts[str(x)] >= MIN_COUNT)
+	for item in litemSet[k]:
+		pattern_list[str(item)] = (cand_counts[str(item)], cand_list[str(item)])
+	if len(litemSet[k]) == 0:
+		break
+	k += 1
+
+f = open("../Output/pattern_list.csv","x")
+for i in pattern_list:
+	f.write(i.replace("(","").replace(")","").replace("'","").replace("\"","") + "\n")
+f.close()
