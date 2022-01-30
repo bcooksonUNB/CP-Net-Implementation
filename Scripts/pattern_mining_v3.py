@@ -4,8 +4,8 @@ import itertools
 
 
 DEBUG = True
-MIN_SUPPORT = 0.6
-MAX_K = 3
+MIN_SUPPORT = 0.4
+MAX_K = 2
 
 file_name_list = os.listdir("../Input")
 

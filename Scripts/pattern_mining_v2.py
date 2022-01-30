@@ -4,9 +4,10 @@ import itertools
 
 
 def sub_lists(l, pos, length, cur_list):
+    print(length)
     if length == 0: return [cur_list]
     ret_list = []
-    if len(l) - pos < length: return ret_list
+    if len(l) - pos < length: return cur_list
     for i in range(pos+1,len(l)):
         ret_list += sub_lists(l, i, length-1,cur_list + [l[i]])
     return ret_list
