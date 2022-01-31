@@ -12,7 +12,7 @@ public class Driver2 {
         ArrayList<EventPattern> patterns = new ArrayList<EventPattern>();
         ArrayList<HashMap<String,Double>> condMaps = new ArrayList<HashMap<String,Double>>();
 
-        File f = new File("D:\\School Work\\Year 4\\Honours\\cond_output6.csv");
+        File f = new File("../Output/cond_output6.csv");
         Scanner scanner = new Scanner(f);
         while(scanner.hasNextLine()){
             String nextLine = scanner.nextLine().replace("\n","");
@@ -104,13 +104,23 @@ public class Driver2 {
         }
 
         //net.printReverseTreeForm();
-        System.out.println(net.getOptimalSolution());
+        //System.out.println(net.getOptimalSolution());
 //        for(PreferenceVariable p : patterns){
 //            System.out.println(p);
 //            net.printCPTable(p);
 //        }
         //net.printTreeForm();
 //        Outcome<Boolean>[] outcomes = net.getAllOutcomes();
+
+        ArrayList<Boolean> values1 = new ArrayList<>();
+        ArrayList<Boolean> values2 = new ArrayList<>();
+        for(int i=0;i<pattern_list.length;i++){
+            values1.add(false);
+            values2.add(true);
+        }
+        Outcome<Boolean> o1 = new Outcome<>(pattern_list,values1);
+        Outcome<Boolean> o2 = new Outcome<>(pattern_list,values2);
+        net.dominanceQuery(o1,o2);
 //        outcomes = net.orderingQuerySort(outcomes);
 //        for(Outcome o : outcomes) System.out.println(o);
     }

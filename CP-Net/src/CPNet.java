@@ -237,6 +237,74 @@ public class CPNet<T> {
         return outcomes;
     }
 
+    public boolean dominanceQuery(Outcome<T> o1, Outcome<T> o2){
+        Outcome<T> tempOutcome = o2.copyOutcome();
+        Outcome<T>[] flips = getImprovingFlipsForOutcome(tempOutcome);
+        ArrayList<Outcome<T>> queue = new ArrayList<>();
+        queue.addAll(Arrays.asList(flips));
+        while(queue.size() > 0){
+            Outcome<T> currentOutcome = queue.remove(0);
+            if (currentOutcome.equals(o1)) return true;
+            flips = getImprovingFlipsForOutcome(currentOutcome);
+            queue.addAll(Arrays.asList(flips));
+        }
+        return false;
+    }
+
+    public Outcome<T>[] dominanceSort(Outcome<T>[] outcomes){
+        //orders by insertion sort
+        int n = outcomes.length;
+        for(int i=1;i<n;i++){
+            Outcome<T> o = outcomes[i];
+            int j = i-1;
+            while(j >= 0 && !dominanceQuery(o, outcomes[j])){
+                outcomes[j+1] = outcomes[j];
+                j = j-1;
+            }
+            outcomes[j+1] = o;
+        }
+        return outcomes;
+    }
+
+    private Outcome<T>[] getImprovingFlipsForOutcome(Outcome<T> o){
+        ArrayList<Outcome> temp_list = new ArrayList<>();
+        PreferenceVariable<T>[] vars = o.getVariables();
+
+        for(int i=0;i<o.size();i++){
+            for(int j=0;j<vars[i].getValues().length;j++){
+                if(!vars[i].getValues()[j].equals(o.getValue(vars[i]))){
+                    ArrayList<T> valueList = new ArrayList<>();
+                    for(int k=0;k<o.size();k++){
+                        if(k != i){
+                            valueList.add(o.getValue(vars[k]));
+                        }
+                        else{
+                            valueList.add(vars[i].getValues()[j]);
+                        }
+                    }
+                    if(isFlipImproved(o, vars[i], vars[i].getValues()[j])){
+                        Outcome<T> flippedOutcome = new Outcome<>(vars, valueList);
+                        temp_list.add(flippedOutcome);
+                    }
+                }
+            }
+        }
+        Outcome<T>[] ret_list = new Outcome[temp_list.size()];
+        ret_list = temp_list.toArray(ret_list);
+        return ret_list;
+    }
+
+    private boolean isFlipImproved(Outcome<T> o, PreferenceVariable<T> var, T newVal){
+        PreferenceVariable<T>[] parents = getParents(var);
+        CPTable<T> t = getTable(var);
+        ArrayList<T> parentValues = new ArrayList<>();
+        for(PreferenceVariable p : parents){
+            parentValues.add((T)o.getValue(p));
+        }
+        DomainOrdering<T> order = t.getOrdering(parentValues);
+        return order.compareValues(newVal, o.getValue(var));
+    }
+
     public Outcome<T> createOutcome(T[] values){
         if(values.length != nodes.length) return null;
         ArrayList<T> vals = new ArrayList<>();

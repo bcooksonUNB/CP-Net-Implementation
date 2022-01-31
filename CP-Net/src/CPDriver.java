@@ -35,19 +35,23 @@ public class CPDriver {
         shirtTable[3] = new DomainOrdering<>(shirtVals);
         net.setConnections(shirt,shirtParents,shirtTable);
 
-        Outcome<String> opt = net.getOptimalSolution();
-
-        String[] o1Vals = {"Black","White","Red"};
+//        Outcome<String> opt = net.getOptimalSolution();
+//
+        String[] o1Vals = {"White","Black","Red"};
         Outcome<String> o1 = net.createOutcome(o1Vals);
         String[] o2Vals = {"White","Black","White"};
         Outcome<String> o2 = net.createOutcome(o2Vals);
-
-        boolean[] out = net.getOrderingQuery(o1,o2);
-        System.out.println(out[0] + " " + out[1]);
-
+//
+//        boolean[] out = net.getOrderingQuery(o1,o2);
+//        System.out.println(out[0] + " " + out[1]);
+//
         Outcome<String>[] outcomes = net.getAllOutcomes();
-        outcomes = net.orderingQuerySort(outcomes);
+        outcomes = net.dominanceSort(outcomes);
         for(Outcome o : outcomes) System.out.println(o);
+//        boolean dom = net.dominanceQuery(o1,o2);
+//        boolean dom2 = net.dominanceQuery(o2,o1);
+//        System.out.println(dom);
+//        System.out.println(dom2);
     }
 
 }
