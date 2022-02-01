@@ -252,18 +252,25 @@ public class CPNet<T> {
     }
 
     public Outcome<T>[] dominanceSort(Outcome<T>[] outcomes){
-        //orders by insertion sort
-        int n = outcomes.length;
-        for(int i=1;i<n;i++){
-            Outcome<T> o = outcomes[i];
-            int j = i-1;
-            while(j >= 0 && !dominanceQuery(o, outcomes[j])){
-                outcomes[j+1] = outcomes[j];
-                j = j-1;
+        ArrayList<Outcome<T>> sort_list = new ArrayList<>();
+        sort_list.add(outcomes[0]);
+        for(int i=1;i<outcomes.length;i++){
+            boolean flag = false;
+            int n = sort_list.size();
+            for(int j=0;j<n;j++){
+                if(!dominanceQuery(outcomes[i],sort_list.get(j)) && dominanceQuery(sort_list.get(j), outcomes[i])){
+                    flag = true;
+                    sort_list.add(j, outcomes[i]);
+                    break;
+                }
             }
-            outcomes[j+1] = o;
+            if(!flag){
+                sort_list.add(outcomes[i]);
+            }
         }
-        return outcomes;
+        Outcome<T>[] ret_list = new Outcome[sort_list.size()];
+        ret_list = sort_list.toArray(ret_list);
+        return ret_list;
     }
 
     private Outcome<T>[] getImprovingFlipsForOutcome(Outcome<T> o){

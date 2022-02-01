@@ -1,0 +1,144 @@
+RegOpenKeyExW
+LoadLibraryA
+RegOpenKeyExA
+HeapAlloc
+HeapFree
+RegQueryValueExW
+RegCloseKey
+GetCurrentThreadId
+GetCurrentThreadId, HeapFree
+RegOpenKeyExA, LoadLibraryA
+LoadLibraryA, RegQueryValueExW
+RegCloseKey, LoadLibraryA
+HeapAlloc, HeapFree
+LoadLibraryA, RegOpenKeyExW
+RegOpenKeyExW, RegOpenKeyExA
+RegQueryValueExW, RegOpenKeyExA
+LoadLibraryA, RegCloseKey
+RegOpenKeyExA, RegOpenKeyExA
+GetCurrentThreadId, HeapAlloc
+RegQueryValueExW, RegQueryValueExW
+RegOpenKeyExW, RegQueryValueExW
+RegCloseKey, RegOpenKeyExA
+RegQueryValueExW, RegOpenKeyExW
+HeapAlloc, HeapAlloc
+RegOpenKeyExW, RegOpenKeyExW
+HeapFree, HeapFree
+HeapAlloc, GetCurrentThreadId
+RegOpenKeyExA, RegQueryValueExW
+RegQueryValueExW, RegCloseKey
+RegOpenKeyExW, RegCloseKey
+RegCloseKey, RegQueryValueExW
+RegOpenKeyExA, RegOpenKeyExW
+RegCloseKey, RegOpenKeyExW
+RegOpenKeyExA, RegCloseKey
+RegQueryValueExW, LoadLibraryA
+RegOpenKeyExW, LoadLibraryA
+HeapFree, HeapAlloc
+LoadLibraryA, RegOpenKeyExA
+RegCloseKey, RegCloseKey
+HeapFree, GetCurrentThreadId
+RegQueryValueExW, RegQueryValueExW, RegCloseKey
+RegQueryValueExW, RegCloseKey, RegQueryValueExW
+RegQueryValueExW, RegCloseKey, RegOpenKeyExW
+HeapAlloc, HeapFree, HeapAlloc
+HeapAlloc, HeapFree, GetCurrentThreadId
+GetCurrentThreadId, HeapAlloc, HeapAlloc
+LoadLibraryA, RegCloseKey, RegQueryValueExW
+RegOpenKeyExW, RegOpenKeyExA, RegCloseKey
+LoadLibraryA, RegCloseKey, RegOpenKeyExW
+RegQueryValueExW, RegCloseKey, LoadLibraryA
+RegOpenKeyExA, RegCloseKey, RegOpenKeyExA
+RegOpenKeyExA, RegCloseKey, RegQueryValueExW
+RegCloseKey, RegCloseKey, RegCloseKey
+RegOpenKeyExA, RegCloseKey, RegOpenKeyExW
+RegQueryValueExW, RegCloseKey, RegOpenKeyExA
+LoadLibraryA, RegQueryValueExW, RegQueryValueExW
+RegQueryValueExW, RegOpenKeyExA, RegCloseKey
+RegOpenKeyExA, RegQueryValueExW, RegOpenKeyExA
+RegCloseKey, RegOpenKeyExW, RegOpenKeyExA
+RegOpenKeyExA, RegOpenKeyExW, RegOpenKeyExA
+HeapFree, HeapFree, HeapFree
+RegOpenKeyExA, RegCloseKey, LoadLibraryA
+RegOpenKeyExW, RegCloseKey, RegOpenKeyExA
+RegQueryValueExW, RegCloseKey, RegCloseKey
+RegOpenKeyExA, RegQueryValueExW, RegQueryValueExW
+RegCloseKey, RegOpenKeyExW, RegQueryValueExW
+RegOpenKeyExA, RegOpenKeyExW, RegQueryValueExW
+LoadLibraryA, RegOpenKeyExA, RegCloseKey
+RegCloseKey, RegQueryValueExW, RegOpenKeyExW
+RegOpenKeyExA, RegQueryValueExW, RegOpenKeyExW
+RegOpenKeyExW, RegCloseKey, RegQueryValueExW
+HeapAlloc, HeapAlloc, HeapFree
+RegOpenKeyExA, RegOpenKeyExW, RegOpenKeyExW
+RegCloseKey, RegOpenKeyExW, RegOpenKeyExW
+HeapFree, HeapFree, HeapAlloc
+RegOpenKeyExW, RegCloseKey, RegOpenKeyExW
+RegOpenKeyExA, RegOpenKeyExA, RegOpenKeyExW
+HeapFree, HeapFree, GetCurrentThreadId
+LoadLibraryA, RegCloseKey, RegCloseKey
+RegOpenKeyExW, LoadLibraryA, RegQueryValueExW
+HeapFree, HeapAlloc, HeapFree
+RegCloseKey, RegQueryValueExW, LoadLibraryA
+RegOpenKeyExA, RegQueryValueExW, LoadLibraryA
+RegOpenKeyExW, LoadLibraryA, RegOpenKeyExW
+RegCloseKey, RegOpenKeyExW, LoadLibraryA
+HeapAlloc, HeapAlloc, HeapAlloc
+RegOpenKeyExA, RegOpenKeyExW, LoadLibraryA
+RegOpenKeyExW, RegOpenKeyExW, RegOpenKeyExA
+RegOpenKeyExW, RegCloseKey, LoadLibraryA
+HeapAlloc, HeapAlloc, GetCurrentThreadId
+LoadLibraryA, RegOpenKeyExW, RegOpenKeyExA
+RegOpenKeyExA, RegCloseKey, RegCloseKey
+RegOpenKeyExW, RegQueryValueExW, RegQueryValueExW
+RegOpenKeyExW, RegOpenKeyExW, RegQueryValueExW
+HeapFree, HeapAlloc, HeapAlloc
+RegOpenKeyExW, RegQueryValueExW, RegOpenKeyExW
+RegOpenKeyExW, RegOpenKeyExW, RegOpenKeyExW
+LoadLibraryA, RegOpenKeyExW, RegQueryValueExW
+RegCloseKey, RegQueryValueExW, RegOpenKeyExA
+HeapFree, HeapAlloc, GetCurrentThreadId
+LoadLibraryA, RegQueryValueExW, RegCloseKey
+RegOpenKeyExA, LoadLibraryA, RegCloseKey
+RegOpenKeyExW, RegOpenKeyExA, RegOpenKeyExW
+RegCloseKey, RegOpenKeyExA, RegOpenKeyExA
+RegOpenKeyExA, RegOpenKeyExA, RegOpenKeyExA
+HeapAlloc, GetCurrentThreadId, HeapFree
+RegCloseKey, RegQueryValueExW, RegQueryValueExW
+RegOpenKeyExW, RegQueryValueExW, LoadLibraryA
+RegOpenKeyExW, RegOpenKeyExW, LoadLibraryA
+RegOpenKeyExW, LoadLibraryA, RegOpenKeyExA
+RegCloseKey, RegOpenKeyExA, RegQueryValueExW
+RegOpenKeyExA, RegOpenKeyExA, RegQueryValueExW
+RegCloseKey, RegQueryValueExW, RegCloseKey
+RegOpenKeyExA, RegQueryValueExW, RegCloseKey
+RegCloseKey, RegOpenKeyExW, RegCloseKey
+RegOpenKeyExA, RegOpenKeyExW, RegCloseKey
+RegCloseKey, RegOpenKeyExA, RegOpenKeyExW
+HeapFree, GetCurrentThreadId, HeapFree
+RegOpenKeyExW, RegCloseKey, RegCloseKey
+HeapAlloc, GetCurrentThreadId, HeapAlloc
+RegOpenKeyExW, RegQueryValueExW, RegOpenKeyExA
+RegQueryValueExW, RegQueryValueExW, RegQueryValueExW
+RegOpenKeyExW, LoadLibraryA, RegCloseKey
+RegCloseKey, RegOpenKeyExA, LoadLibraryA
+HeapFree, GetCurrentThreadId, HeapAlloc
+RegOpenKeyExA, RegOpenKeyExA, LoadLibraryA
+RegOpenKeyExW, RegOpenKeyExA, RegOpenKeyExA
+RegQueryValueExW, RegOpenKeyExW, RegCloseKey
+RegOpenKeyExW, RegOpenKeyExA, RegQueryValueExW
+RegOpenKeyExW, RegQueryValueExW, RegCloseKey
+RegOpenKeyExW, RegOpenKeyExW, RegCloseKey
+LoadLibraryA, RegOpenKeyExW, RegCloseKey
+RegCloseKey, RegCloseKey, RegOpenKeyExA
+GetCurrentThreadId, HeapFree, HeapFree
+RegCloseKey, RegCloseKey, RegQueryValueExW
+RegOpenKeyExW, RegOpenKeyExA, LoadLibraryA
+RegCloseKey, RegCloseKey, RegOpenKeyExW
+RegCloseKey, RegOpenKeyExA, RegCloseKey
+RegOpenKeyExA, RegOpenKeyExA, RegCloseKey
+GetCurrentThreadId, HeapFree, HeapAlloc
+HeapAlloc, HeapFree, HeapFree
+LoadLibraryA, RegOpenKeyExA, RegOpenKeyExA
+GetCurrentThreadId, HeapAlloc, HeapFree
+RegCloseKey, RegCloseKey, LoadLibraryA

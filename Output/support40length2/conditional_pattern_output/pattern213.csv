@@ -1,0 +1,2 @@
+GetFileAttributesW, RegSetValueExW
+Pattern_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count

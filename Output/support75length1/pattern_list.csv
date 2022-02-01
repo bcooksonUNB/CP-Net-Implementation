@@ -1,0 +1,16 @@
+RegOpenKeyExW
+LoadLibraryA
+RegOpenKeyExA
+LocalAlloc
+HeapAlloc
+HeapFree
+IsBadReadPtr
+IsBadWritePtr
+LocalFree
+RegQueryValueExW
+RegCloseKey
+GetCurrentThread
+GetCurrentThreadId
+IsBadStringPtrW
+GetCurrentProcessId
+RegEnumValueW
