@@ -1,0 +1,2 @@
+('GetEnvironmentVariableW'; 'GetFullPathNameW'),malicious
+Pattern,Present,Absent

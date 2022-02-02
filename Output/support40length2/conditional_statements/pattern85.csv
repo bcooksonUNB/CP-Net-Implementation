@@ -1,0 +1,2 @@
+('GetFileAttributesW'; 'HeapFree'),malicious
+Pattern,Present,Absent

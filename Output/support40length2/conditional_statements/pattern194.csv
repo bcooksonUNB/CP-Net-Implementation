@@ -1,0 +1,2 @@
+('GetLongPathNameW'; 'GetCurrentThreadId'),malicious
+Pattern,Present,Absent

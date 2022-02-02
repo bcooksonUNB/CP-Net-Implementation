@@ -1,0 +1,5 @@
+('ReadFile';),malicious
+Pattern,Present,Absent
+('GetFileAttributesW';),malicious,benign
+('GetFullPathNameW';),malicious,benign
+('CreateFileW';),malicious,benign

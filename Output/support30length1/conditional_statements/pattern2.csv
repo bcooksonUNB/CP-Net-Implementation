@@ -1,0 +1,15 @@
+('GetCurrentProcess';),benign
+Pattern,Present,Absent
+('RegOpenKeyW';),benign,malicious
+('HeapSize';),benign,malicious
+('Sleep';),benign,malicious
+('GetThreadPriority';),benign,malicious
+('SetThreadPriority';),benign,malicious
+('OpenProcess';),benign,malicious
+('ReadFile';),malicious,benign
+('GetDriveTypeW';),malicious,benign
+('GetFileAttributesW';),malicious,benign
+('GetFullPathNameW';),malicious,benign
+('GetLongPathNameW';),malicious,benign
+('CreateFileW';),malicious,benign
+('GetFileSize';),malicious,benign

@@ -1,0 +1,2 @@
+('GetFileAttributesW'; 'CreateProcessW'),malicious
+Pattern,Present,Absent

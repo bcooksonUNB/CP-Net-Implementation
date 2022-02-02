@@ -1,0 +1,2 @@
+('GetFullPathNameW'; 'IsBadStringPtrW'),malicious
+Pattern,Present,Absent

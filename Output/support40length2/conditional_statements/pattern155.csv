@@ -1,0 +1,2 @@
+('GetFullPathNameW'; 'LoadLibraryA'),malicious
+Pattern,Present,Absent

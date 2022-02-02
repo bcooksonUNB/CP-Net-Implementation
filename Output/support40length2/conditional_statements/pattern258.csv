@@ -1,0 +1,2 @@
+('GetCurrentProcessId'; 'GetFileAttributesW'),malicious
+Pattern,Present,Absent

@@ -1,0 +1,2 @@
+('GetLongPathNameW'; 'GlobalUnlock'),malicious
+Pattern,Present,Absent

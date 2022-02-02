@@ -1,0 +1,2 @@
+('RegSetValueExW'; 'GetFileAttributesW'),malicious
+Pattern,Present,Absent

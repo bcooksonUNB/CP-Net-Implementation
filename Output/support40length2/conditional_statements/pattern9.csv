@@ -1,0 +1,2 @@
+('GetLongPathNameW'; 'HeapAlloc'),malicious
+Pattern,Present,Absent

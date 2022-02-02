@@ -1,0 +1,16 @@
+('Sleep';),137,99,38
+Pattern_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count
+('RegOpenKeyW';),56,18,38
+('HeapSize';),88,51,37
+('GetCurrentProcess';),89,52,37
+('GetThreadPriority';),83,47,36
+('SetThreadPriority';),94,56,38
+('OpenProcess';),93,55,38
+('ReadFile';),67,67,0
+('GetDriveTypeW';),53,53,0
+('GetFileAttributesW';),88,88,0
+('GetFullPathNameW';),86,86,0
+('GetLongPathNameW';),84,84,0
+('CreateFileW';),75,75,0
+('SearchPathW';),55,55,0
+('GetFileSize';),55,55,0

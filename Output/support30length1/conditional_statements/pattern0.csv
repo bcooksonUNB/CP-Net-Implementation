@@ -1,0 +1,8 @@
+('RegOpenKeyW';),benign
+Pattern,Present,Absent
+('HeapSize';),benign,malicious
+('GetThreadPriority';),benign,malicious
+('SetThreadPriority';),benign,malicious
+('OpenProcess';),benign,malicious
+('ReadFile';),malicious,benign
+('GetFullPathNameW';),malicious,benign

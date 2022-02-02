@@ -1,0 +1,2 @@
+('RegOpenKeyExA'; 'GetLongPathNameW'),222,222,0
+Pattern_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count

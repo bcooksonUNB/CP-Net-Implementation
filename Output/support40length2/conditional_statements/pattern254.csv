@@ -1,0 +1,2 @@
+('GetCurrentProcessId'; 'GetFullPathNameW'),malicious
+Pattern,Present,Absent

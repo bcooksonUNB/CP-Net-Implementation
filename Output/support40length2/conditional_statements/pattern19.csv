@@ -1,0 +1,2 @@
+('GetCurrentThreadId'; 'GetFileAttributesW'),malicious
+Pattern,Present,Absent

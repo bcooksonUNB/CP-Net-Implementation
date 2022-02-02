@@ -1,0 +1,2 @@
+('GetLongPathNameW'; 'IsBadReadPtr'),malicious
+Pattern,Present,Absent

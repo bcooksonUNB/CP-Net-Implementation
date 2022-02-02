@@ -1,0 +1,32 @@
+('RegOpenKeyExA'; 'ReadFile'),156,149,7
+Pattern_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count
+('GetFileAttributesW';),118,118,0
+('GetFullPathNameW';),118,118,0
+('GetFileAttributesW'; 'LocalAlloc'),117,117,0
+('RegOpenKeyExA'; 'GetFullPathNameW'),117,117,0
+('RegOpenKeyExA'; 'GetFileAttributesW'),118,118,0
+('GetCurrentThreadId'; 'GetFileAttributesW'),118,118,0
+('LocalFree'; 'GetFullPathNameW'),118,118,0
+('LocalFree'; 'GetFileAttributesW'),117,117,0
+('HeapAlloc'; 'GetFullPathNameW'),118,118,0
+('HeapAlloc'; 'GetFileAttributesW'),118,118,0
+('RegOpenKeyExW'; 'GetFullPathNameW'),118,118,0
+('GetFileAttributesW'; 'RegCloseKey'),117,117,0
+('GetFileAttributesW'; 'HeapFree'),118,118,0
+('GetCurrentThreadId'; 'GetFullPathNameW'),118,118,0
+('HeapFree'; 'GetFullPathNameW'),118,118,0
+('HeapFree'; 'GetFileAttributesW'),118,118,0
+('GetFullPathNameW'; 'HeapAlloc'),118,118,0
+('GetFileAttributesW'; 'LocalFree'),117,117,0
+('LocalAlloc'; 'GetFileAttributesW'),117,117,0
+('RegCloseKey'; 'GetFullPathNameW'),118,118,0
+('IsBadWritePtr'; 'GetFullPathNameW'),117,117,0
+('RegCloseKey'; 'GetFileAttributesW'),118,118,0
+('GetFullPathNameW'; 'HeapFree'),118,118,0
+('IsBadReadPtr'; 'GetFullPathNameW'),117,117,0
+('LocalAlloc'; 'GetFullPathNameW'),118,118,0
+('GetCurrentProcessId'; 'GetFullPathNameW'),118,118,0
+('GetFileAttributesW'; 'HeapAlloc'),118,118,0
+('RegOpenKeyExW'; 'GetFileAttributesW'),117,117,0
+('GetCurrentProcessId'; 'GetFileAttributesW'),117,117,0
+('RegQueryValueExW'; 'GetFullPathNameW'),118,118,0

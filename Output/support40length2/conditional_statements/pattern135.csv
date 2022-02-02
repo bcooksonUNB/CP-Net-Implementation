@@ -1,0 +1,2 @@
+('RegSetValueExW'; 'GetLongPathNameW'),malicious
+Pattern,Present,Absent

@@ -1,0 +1,6 @@
+('SetThreadPriority';),benign,('ReadFile';),malicious,('GetFileAttributesW';),malicious,('GetFullPathNameW';),malicious,('GetLongPathNameW';),malicious
+('OpenProcess';),benign,('ReadFile';),malicious,('GetFileAttributesW';),malicious,('GetFullPathNameW';),malicious,('GetLongPathNameW';),malicious
+('ReadFile';),malicious,('GetFileAttributesW';),malicious,('GetFullPathNameW';),malicious
+('GetFileAttributesW';),malicious
+('GetFullPathNameW';),malicious
+('GetLongPathNameW';),malicious

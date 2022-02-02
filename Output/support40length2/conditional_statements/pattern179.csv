@@ -1,0 +1,2 @@
+('GetFileAttributesW'; 'GetFullPathNameW'),malicious
+Pattern,Present,Absent

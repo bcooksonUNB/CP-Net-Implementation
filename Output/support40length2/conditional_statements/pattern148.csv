@@ -1,0 +1,2 @@
+('GetFileAttributesW'; 'IsBadWritePtr'),malicious
+Pattern,Present,Absent

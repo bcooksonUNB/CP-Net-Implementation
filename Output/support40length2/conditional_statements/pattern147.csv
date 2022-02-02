@@ -1,0 +1,2 @@
+('GetFileAttributesW'; 'GlobalFree'),malicious
+Pattern,Present,Absent
