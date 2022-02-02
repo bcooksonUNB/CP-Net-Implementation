@@ -1,9 +1,0 @@
-GlobalMemoryStatus
-Attribute_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count
-LocalSize,28,2,26
-OpenProcess,39,3,36
-RegNotifyChangeKeyValue,36,3,33
-Sleep,34,2,32
-CreateThread,39,4,35
-SetThreadPriority,39,3,36
-GetThreadPriority,38,2,36

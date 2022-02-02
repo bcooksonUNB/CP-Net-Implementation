@@ -1,6 +1,0 @@
-OpenProcess
-Attribute_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count
-Sleep,93,55,38
-HeapSize,88,44,44
-ReadFile,95,95,0
-GetCurrentProcess,84,41,43

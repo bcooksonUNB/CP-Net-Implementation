@@ -1,8 +1,0 @@
-LocalReAlloc
-Attribute_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count
-OpenProcess,31,12,19
-Sleep,32,14,18
-CreateThread,27,9,18
-SetThreadPriority,27,8,19
-ReadFile,22,22,0
-GetThreadPriority,23,6,17

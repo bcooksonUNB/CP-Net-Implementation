@@ -1,7 +1,0 @@
-RegEnumKeyA
-Attribute_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count
-LocalSize,13,2,11
-RegOpenKeyW,19,6,13
-HeapReAlloc,17,4,13
-ReadFile,14,14,0
-GetThreadPriority,18,6,12

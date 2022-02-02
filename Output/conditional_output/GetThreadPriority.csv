@@ -1,6 +1,0 @@
-GetThreadPriority
-Attribute_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count
-Sleep,83,47,36
-HeapSize,81,40,41
-ReadFile,88,88,0
-GetCurrentProcess,73,32,41

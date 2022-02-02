@@ -1,5 +1,0 @@
-ReadFile
-Attribute_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count
-OpenProcess,95,95,0
-SetThreadPriority,97,97,0
-GetThreadPriority,88,88,0

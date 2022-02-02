@@ -7,7 +7,7 @@ import os
 
 UNCONDITIONAL_SUPPORT = 0.4
 CONDITIONAL_SUPPORT = 0.4
-MAX_PATTERN_LENGTH = 1
+MAX_PATTERN_LENGTH = 2
 
 if len(sys.argv) < 2:
     raise Exception("Input a directory name for output")

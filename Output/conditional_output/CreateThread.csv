@@ -1,8 +1,0 @@
-CreateThread
-Attribute_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count
-LocalSize,34,4,30
-OpenProcess,50,10,40
-RegOpenKeyW,57,17,40
-VirtualAlloc,52,16,36
-GetThreadPriority,47,9,38
-GlobalMemoryStatus,39,4,35
