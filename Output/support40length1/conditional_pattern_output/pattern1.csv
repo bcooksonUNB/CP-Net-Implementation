@@ -1,4 +1,4 @@
-OpenProcess,
+('OpenProcess';),168,122,46
 Pattern_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count
 ('ReadFile';),95,95,0
 ('GetFileAttributesW';),118,118,0

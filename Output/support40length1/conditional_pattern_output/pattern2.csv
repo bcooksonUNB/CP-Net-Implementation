@@ -1,7 +1,4 @@
-ReadFile,
+('ReadFile';),160,152,8
 Pattern_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count
-('SetThreadPriority';),97,97,0
-('OpenProcess';),95,95,0
 ('GetFileAttributesW';),118,118,0
 ('GetFullPathNameW';),119,119,0
-('GetLongPathNameW';),108,108,0

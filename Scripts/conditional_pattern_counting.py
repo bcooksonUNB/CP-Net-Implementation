@@ -41,7 +41,6 @@ def unconditional_chi_test(attribute, total_counts):
     if expected_mal == 0: chi_val = ((actual_ben - expected_ben) ** 2) / expected_ben
     elif expected_ben == 0: chi_val = ((actual_mal - expected_mal) ** 2) / expected_mal
     else: chi_val = ((actual_mal - expected_mal) ** 2) / expected_mal + ((actual_ben - expected_ben) ** 2) / expected_ben
-    print(chi_val)
     if chi_val >= 3.84: return True, chi_val
     return False, chi_val
 
@@ -116,6 +115,11 @@ def runMain(dir_name, CONDITIONAL_SUPPORT):
                     total_counts[str(pat)][1] += 1
         if not unconditional_chi_test(str(pat),total_counts)[0]:
             remove_list.append(pat)
+        # else:
+        #     mal_check = True if float(total_counts[str(pat)][1])/total_counts[str(pat)][0] >= 0.8247 else False
+        #     not_check = True if float(320-total_counts[str(pat)][1])/(388-total_counts[str(pat)][0]) >= 0.8247 else False
+        #     if mal_check == not_check:
+        #         remove_list.append(pat)
         counter += 1
         if DEBUG: print("{0} Attributes remaining for Unconditional Checks".format(len(list(pattern_list))-counter))
 
@@ -147,6 +151,25 @@ def runMain(dir_name, CONDITIONAL_SUPPORT):
             counter += 1
             if DEBUG: print("{0} Attributes remaining for Conditional Checks".format(len(list(total_counts.keys()))-counter))
 
+    mal_map = {str(x):[True if float(total_counts[x][1])/total_counts[x][0] >= 0.8247 else False, 
+                        {str(y):True if float(final_map[str(x)][str(y)][1])/final_map[str(x)][str(y)][0] >= 0.8247 else False
+                        for y in final_map[str(x)]}] 
+                        for x in final_map}
+
+    for pat in final_map:
+        del_list = []
+        for pat2 in final_map[pat]:
+            mal_val = mal_map[pat][1][pat2]
+            not_vals = [0,0,0]
+            not_vals[0] = total_counts[pat][0] - final_map[pat][pat2][0]
+            not_vals[1] = total_counts[pat][1] - final_map[pat][pat2][1]
+            not_vals[2] = total_counts[pat][2] - final_map[pat][pat2][2]
+            not_mal_val = True if float(not_vals[1])/not_vals[0] >= 0.8247 else False
+            if not_mal_val == mal_val:
+                del_list.append(pat2)
+        for p in del_list:
+            del final_map[pat][p]
+
     f = open("../Output/{0}/pattern_count.csv".format(dir_name),"x")
     f.write("Pattern_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count\n")
     for pat in total_counts:
@@ -163,9 +186,10 @@ def runMain(dir_name, CONDITIONAL_SUPPORT):
     counter = 0
     for pattern in final_map:
         f = open("../Output/{0}/conditional_pattern_output/pattern{1}.csv".format(dir_name,counter), "x")
-        f.write(str(pattern).replace("(","").replace(")","").replace("'","").replace("\"","") + "\n")
-        f.write(
-            "Pattern_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count\n")
+        #f.write(str(pattern).replace("(","").replace(")","").replace("'","").replace("\"","") + "\n")
+        f.write("{0},{1},{2},{3}\n".format(str(pattern).replace(",",";"),total_counts[str(pattern)][0]
+                                                        ,total_counts[str(pattern)][1],total_counts[str(pattern)][2]))
+        f.write("Pattern_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count\n")
         for pat in final_map[str(pattern)]:
             pat = str(pat)
             write_string = "{0},{1},{2},{3}\n".format(pat.replace(",",";"),final_map[str(pattern)][str(pat)][0],
@@ -175,9 +199,6 @@ def runMain(dir_name, CONDITIONAL_SUPPORT):
         counter += 1
         if DEBUG: print("{0} Attribute Writes remaining".format(len(list(pattern_list))-counter))
         f.close()
-
-    print(remove_list)
-    print(len(remove_list))
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

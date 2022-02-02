@@ -1,6 +1,6 @@
 public class EventPattern extends PreferenceVariable<Boolean>{
 
-    private double baseProbMal;
+    private boolean baseMal;
 
     EventPattern(String name){
         super(name);
@@ -8,14 +8,14 @@ public class EventPattern extends PreferenceVariable<Boolean>{
         this.setValues(possibleValues);
     }
 
-    EventPattern(String name, double baseProbMal){
+    EventPattern(String name, boolean baseMal){
         super(name);
         Boolean[] possibleValues = {false,true};
         this.setValues(possibleValues);
-        this.baseProbMal = baseProbMal;
+        this.baseMal = baseMal;
     }
 
-    public double getBaseProbMal() {
-        return baseProbMal;
+    public boolean getBaseMal() {
+        return baseMal;
     }
 }

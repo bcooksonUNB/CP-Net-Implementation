@@ -133,6 +133,7 @@ public class CPNet<T> {
         ArrayList<PreferenceVariable> doneList = new ArrayList<PreferenceVariable>();
 
         while(doneCount < nodes.length){
+            System.out.println(nodes.length);
             for(int i=0;i<nodes.length;i++){
                 if(!doneFlags[i]){
                     PreferenceVariable[] parents = getParents(nodes[i]);
