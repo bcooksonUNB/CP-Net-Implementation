@@ -1,2 +1,0 @@
-('GetFullPathNameW'; 'GetCurrentThreadId'),malicious
-Pattern,Present,Absent

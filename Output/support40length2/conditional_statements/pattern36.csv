@@ -1,2 +1,0 @@
-('GetFileAttributesW'; 'LoadLibraryA'),malicious
-Pattern,Present,Absent

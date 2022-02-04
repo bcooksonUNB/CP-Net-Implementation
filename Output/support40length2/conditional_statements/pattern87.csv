@@ -1,2 +1,0 @@
-('GetEnvironmentVariableW'; 'GetLongPathNameW'),malicious
-Pattern,Present,Absent

@@ -1,2 +1,0 @@
-('IsBadReadPtr'; 'GetFileAttributesW'),malicious
-Pattern,Present,Absent

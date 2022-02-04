@@ -1,2 +1,0 @@
-('GetFullPathNameW'; 'RegOpenKeyExA'),malicious
-Pattern,Present,Absent

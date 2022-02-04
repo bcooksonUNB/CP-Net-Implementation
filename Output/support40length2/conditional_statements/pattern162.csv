@@ -1,2 +1,0 @@
-('RegCloseKey'; 'GetFileAttributesW'),malicious
-Pattern,Present,Absent

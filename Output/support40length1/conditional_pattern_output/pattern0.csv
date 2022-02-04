@@ -1,6 +1,0 @@
-('SetThreadPriority';),168,123,45
-Pattern_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count
-('ReadFile';),97,97,0
-('GetFileAttributesW';),121,121,0
-('GetFullPathNameW';),119,119,0
-('GetLongPathNameW';),118,118,0

@@ -1,2 +1,0 @@
-('LocalAlloc'; 'GetFileAttributesW'),malicious
-Pattern,Present,Absent

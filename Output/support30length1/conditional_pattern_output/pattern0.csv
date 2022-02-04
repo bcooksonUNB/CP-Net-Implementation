@@ -1,8 +1,0 @@
-('RegOpenKeyW';),132,78,54
-Pattern_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count
-('HeapSize';),73,29,44
-('GetThreadPriority';),51,8,43
-('SetThreadPriority';),57,12,45
-('OpenProcess';),60,14,46
-('ReadFile';),55,48,7
-('GetFullPathNameW';),51,51,0

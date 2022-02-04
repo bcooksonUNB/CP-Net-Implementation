@@ -1,2 +1,0 @@
-('GetFileAttributesW'; 'RegQueryValueExW'),malicious
-Pattern,Present,Absent

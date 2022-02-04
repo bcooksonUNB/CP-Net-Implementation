@@ -269,9 +269,12 @@ public class CPNet<T> {
                 sort_list.add(outcomes[i]);
             }
         }
-        Outcome<T>[] ret_list = new Outcome[sort_list.size()];
-        ret_list = sort_list.toArray(ret_list);
-        return ret_list;
+        int counter = 0;
+        for(Outcome<T> o : sort_list){
+            outcomes[counter] = o;
+            counter += 1;
+        }
+        return outcomes;
     }
 
     private Outcome<T>[] getImprovingFlipsForOutcome(Outcome<T> o){

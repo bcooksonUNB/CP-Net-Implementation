@@ -1,2 +1,0 @@
-('HeapAlloc'; 'GetFileAttributesW'),malicious
-Pattern,Present,Absent

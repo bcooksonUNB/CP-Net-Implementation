@@ -2,6 +2,36 @@ import os
 import sys
 DEBUG = True
 
+def strongconnect(v, node_nums,index, S,parents_list,cycles):
+    node_nums[v]["index"] = index
+    node_nums[v]["lowlink"] = index
+    index += 1
+    S.append(v)
+    node_nums[v]["onstack"] = False
+
+    for w in parents_list[v]:
+        if node_nums[w]["index"] == None:
+            index = strongconnect(w,node_nums,index,S,parents_list,cycles)
+            node_nums[v]["lowlink"] == min(node_nums[v]["lowlink"],node_nums[w]["lowlink"])
+        elif node_nums[w]["onstack"]:
+            node_nums[v]["lowlink"] = min(node_nums[v]["lowlink"],node_nums[w]["index"])
+    if node_nums[v]["lowlink"] == node_nums[v]["index"] and len(S) > 0:
+        new_cycle = []
+        w = S[0]
+        del S[0]
+        node_nums[w]["onstack"] = False
+        new_cycle.append(w)
+        while w != v and len(S) > 0:
+            w = S[0]
+            del S[0]
+            node_nums[w]["onstack"] = False
+            new_cycle.append(w)
+        cycles.append(new_cycle)
+    return index
+        
+
+
+
 def get_one_less_sublists(l):
     if(len(l) <= 1): return []
     ret_list = []
@@ -57,7 +87,7 @@ def conditional_chi_test(pat, pat2, total_counts, final_map):
     return False, chi_val
 
 def runMain(dir_name, CONDITIONAL_SUPPORT):
-    file_name_list = os.listdir("../Input")
+    file_name_list = os.listdir("../Input/training")
 
     #set of all attributes
     attribute_list = set()
@@ -71,7 +101,7 @@ def runMain(dir_name, CONDITIONAL_SUPPORT):
     LIMIT = 0.4
 
     for name in file_name_list:
-        f = open("../Input/" + name)
+        f = open("../Input/training/" + name)
         next_attribute = f.readline()
         file_attribute_list[name] = []
         while next_attribute: 
@@ -170,6 +200,49 @@ def runMain(dir_name, CONDITIONAL_SUPPORT):
         for p in del_list:
             del final_map[pat][p]
 
+
+    #get cycles
+    parents_list = {str(x):[] for x in final_map}
+    for pat in total_counts:
+        for pat2 in total_counts:
+            if str(pat2) in final_map[str(pat)]:
+                parents_list[str(pat2)].append(str(pat))
+
+    for pat in total_counts:
+        for pat2 in total_counts:
+            if pat2 in parents_list[pat] and pat in parents_list[pat2]:
+                del final_map[pat][pat2]
+                parents_list[pat2].remove(pat)
+
+
+    index = 0
+    temp_stack = []
+    node_nums = {x:{"index":None,"lowlink":None,"onstack":False} for x in parents_list}
+    cycles = []
+    for v in parents_list:
+        if node_nums[v]["index"] == None:
+            index = strongconnect(v,node_nums,index,temp_stack,parents_list,cycles)
+
+    #print(cycles)
+    # flag = False
+    # for c in cycles:
+    #     if len(c) > 1:
+    #         flag = True
+    #         del final_map[c[0]][c[1]]
+    #         parents_list[c[1]].remove(c[0])
+    #for p in parents_list: print(p,parents_list[p])
+    # cycles = []
+    # node_nums = {x:{"index":None,"lowlink":None,"onstack":False} for x in parents_list}
+    # index = 0
+    # temp_stack = []
+    # for v in parents_list:
+    #     if node_nums[v]["index"] == None:
+    #         index = strongconnect(v,node_nums,index,temp_stack,parents_list,cycles)
+    # print(cycles)
+    #raise Exception()
+        
+        
+
     f = open("../Output/{0}/pattern_count.csv".format(dir_name),"x")
     f.write("Pattern_Name,Total_Unique_Count,Malicious_Unique_Count,Beneign_Unique_Count\n")
     for pat in total_counts:
@@ -199,6 +272,12 @@ def runMain(dir_name, CONDITIONAL_SUPPORT):
         counter += 1
         if DEBUG: print("{0} Attribute Writes remaining".format(len(list(pattern_list))-counter))
         f.close()
+
+    f = open("../Output/{0}/final_pattern_list.csv".format(dir_name,counter), "x")
+    for pattern in pattern_list:
+        if str(pattern) in final_map:
+            f.write(str(pattern).replace("(","").replace(")","").replace("'","").replace("\"","") + "\n")
+    f.close()
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

@@ -1,2 +1,0 @@
-('GetFullPathNameW'; 'LoadLibraryExW'),malicious
-Pattern,Present,Absent

@@ -1,2 +1,0 @@
-('GetFullPathNameW'; 'LocalFree'),malicious
-Pattern,Present,Absent

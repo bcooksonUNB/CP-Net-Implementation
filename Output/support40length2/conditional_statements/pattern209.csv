@@ -1,2 +1,0 @@
-('RegSetValueExW'; 'GetFullPathNameW'),malicious
-Pattern,Present,Absent

@@ -1,2 +1,0 @@
-('GetLongPathNameW'; 'RegCloseKey'),malicious
-Pattern,Present,Absent

@@ -1,2 +1,0 @@
-('GetCurrentProcessId'; 'GetLongPathNameW'),malicious
-Pattern,Present,Absent

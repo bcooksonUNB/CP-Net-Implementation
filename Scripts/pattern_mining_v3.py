@@ -7,9 +7,6 @@ DEBUG = True
 #MIN_SUPPORT = 0.4
 #MAX_K = 2
 
-file_name_list = os.listdir("../Input")
-
-
 def get_one_less_sublists(l):
     ret_list = []
     for i in range(len(l)):
@@ -49,6 +46,7 @@ def is_sequence_in_file(seq, file):
     return False
 
 def runMain(dir_name, MIN_SUPPORT, MAX_K):
+    file_name_list = os.listdir("../Input/training")
     fileList = {}
 
     benItemCounts = {}
@@ -59,7 +57,7 @@ def runMain(dir_name, MIN_SUPPORT, MAX_K):
 
     counter = 0
     for name in file_name_list:
-        f = open("../Input/" + name)
+        f = open("../Input/training/" + name)
         next_attribute = f.readline()
         l = []
         while next_attribute:

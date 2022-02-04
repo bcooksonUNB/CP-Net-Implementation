@@ -1,6 +1,0 @@
-('SetThreadPriority';),benign
-Pattern,Present,Absent
-('ReadFile';),malicious,benign
-('GetFileAttributesW';),malicious,benign
-('GetFullPathNameW';),malicious,benign
-('GetLongPathNameW';),malicious,benign

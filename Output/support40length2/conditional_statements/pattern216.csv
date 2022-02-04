@@ -1,2 +1,0 @@
-('GetFullPathNameW'; 'HeapFree'),malicious
-Pattern,Present,Absent

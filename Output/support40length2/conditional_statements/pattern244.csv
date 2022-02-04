@@ -1,2 +1,0 @@
-('GetFullPathNameW'; 'GetFileAttributesW'),malicious
-Pattern,Present,Absent

@@ -1,2 +1,0 @@
-('GetFullPathNameW'; 'LocalAlloc'),malicious
-Pattern,Present,Absent

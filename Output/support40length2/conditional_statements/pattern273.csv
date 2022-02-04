@@ -1,2 +1,0 @@
-('GetFileAttributesW'; 'GetCurrentThreadId'),malicious
-Pattern,Present,Absent

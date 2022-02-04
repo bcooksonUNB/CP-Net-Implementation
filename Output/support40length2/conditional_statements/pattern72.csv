@@ -1,2 +1,0 @@
-('GetLongPathNameW'; 'IsBadStringPtrW'),malicious
-Pattern,Present,Absent

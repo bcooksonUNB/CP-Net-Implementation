@@ -1,2 +1,0 @@
-('GetFileAttributesW'; 'GetEnvironmentVariableW'),malicious
-Pattern,Present,Absent

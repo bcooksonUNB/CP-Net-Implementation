@@ -7,12 +7,13 @@ public class Driver3 {
 
     static Boolean[] b1 = {true,false};
     static Boolean[] b2 = {false,true};
+    static String outputFolder = "../Output/support50length1/";
 
     public static void main(String[] args) throws Exception{
         ArrayList<EventPattern> patterns = new ArrayList<EventPattern>();
         ArrayList<HashMap<String,Boolean>> condMaps = new ArrayList();
 
-        File f = new File("../Output/support40length1/cp_net_input.csv");
+        File f = new File(outputFolder + "cp_net_input.csv");
         Scanner scanner = new Scanner(f);
         while(scanner.hasNextLine()){
             String nextLine = scanner.nextLine().replace("\n","");
@@ -106,6 +107,34 @@ public class Driver3 {
             net.setConnections(pattern_list[i], parents, orderList);
         }
 
+        File folder = new File(outputFolder + "testingdata");
+        File[] files = folder.listFiles();
+        EventOutcome[] outcomes = new EventOutcome[files.length];
+        int counter = 0;
+        for(File fi : files){
+            String fileName = fi.getName();
+            scanner = new Scanner(fi);
+            HashMap<String,Boolean> presentMap = new HashMap();
+            while(scanner.hasNextLine()){
+                String nextLine = scanner.nextLine().replace("\n","");
+                String[] lineList = nextLine.split(",");
+                String event = lineList[0];
+                boolean present = lineList[1].equals("True");
+                presentMap.put(event,present);
+            }
+            ArrayList<Boolean> valueList = new ArrayList<>();
+            for(EventPattern pat : pattern_list){
+                valueList.add(presentMap.get(pat.getName()));
+            }
+            outcomes[counter] = new EventOutcome(pattern_list,valueList,fileName);
+            counter += 1;
+        }
+
+        outcomes = (EventOutcome[])net.orderingQuerySort(outcomes);
+        for(EventOutcome eo : outcomes){
+            System.out.println(eo.getEventName());
+            System.out.println(eo);
+        }
 //        EventPattern p = null;
 //        for(EventPattern pat : pattern_list)
 //            if(pat.getName().equals("('RegOpenKeyW';)")){
@@ -113,16 +142,18 @@ public class Driver3 {
 //                break;
 //            }
 //        net.printCPTable(p);
-        Outcome<Boolean>[] outcomes = net.getAllOutcomes();
-        outcomes = net.orderingQuerySort(outcomes);
-        System.out.println("----10 Most Benign----");
-        for(int i=0;i<10;i++){
-            System.out.println(outcomes[i]);
-        }
-        System.out.println("---------------\n");
-        System.out.println("----10 Most Malicious----");
-        for(int i=outcomes.length-1;i>= outcomes.length-10;i--){
-            System.out.println(outcomes[i]);
-        }
+
+//        System.out.println(net.getOptimalSolution());
+//        Outcome<Boolean>[] outcomes = net.getAllOutcomes();
+//        outcomes = net.orderingQuerySort(outcomes);
+//        System.out.println("----10 Most Benign----");
+//        for(int i=0;i<10;i++){
+//            System.out.println(outcomes[i]);
+//        }
+//        System.out.println("---------------\n");
+//        System.out.println("----10 Most Malicious----");
+//        for(int i=outcomes.length-1;i>= outcomes.length-10;i--){
+//            System.out.println(outcomes[i]);
+//        }
     }
 }
