@@ -55,7 +55,6 @@ def runMain(dir_name, MIN_SUPPORT, MAX_K):
     litemSet = {1:set()}
     pattern_list = {}
 
-    counter = 0
     for name in file_name_list:
         f = open("../Input/training/" + name)
         next_attribute = f.readline()
@@ -67,14 +66,12 @@ def runMain(dir_name, MIN_SUPPORT, MAX_K):
         fileList[name] = l
         if DEBUG: print("Done Reading {0}".format(name))
         f.close()
-        if counter == 400: break
-        counter += 1
 
     TOTAL = len(fileList)
     MIN_COUNT = math.ceil(TOTAL*MIN_SUPPORT)
     fileList = {x:fileList[x][1:] for x in fileList}
-    ben_files = {x:fileList[x] for x in fileList if 'benign' in name}
-    mal_files = {x:fileList[x] for x in fileList if 'benign' not in name}
+    ben_files = {x:fileList[x] for x in fileList if 'benign' in x}
+    mal_files = {x:fileList[x] for x in fileList if 'benign' not in x}
 
     BEN_TOTAL = len(ben_files)
     BEN_MIN_COUNT = math.ceil(BEN_TOTAL*MIN_SUPPORT)
@@ -104,6 +101,7 @@ def runMain(dir_name, MIN_SUPPORT, MAX_K):
             pattern_list[str(item)] = [benItemCounts[item],itemList[item]]
 
     for f in mal_files:
+        #print(f)
         foundSet = set()
         file = fileList[f]
         for item in file:
@@ -118,9 +116,12 @@ def runMain(dir_name, MIN_SUPPORT, MAX_K):
                     itemList[item].append(f)
 
     for item in malItemCounts:
+        #print(item, malItemCounts[item])
         if malItemCounts[item] > MAL_MIN_COUNT :
+            #print(True,MAL_MIN_COUNT,len(mal_files))
             litemSet[1].add( (item,) )
             pattern_list[str(item)] = [malItemCounts[item],itemList[item]]
+    #raise Exception()
 
     #transformation phase
     for i in ben_files:
@@ -146,6 +147,7 @@ def runMain(dir_name, MIN_SUPPORT, MAX_K):
                     cand_counts[str(c)] += 1
                     cand_list[str(c)].append(i)
         litemSet[k] = set(x for x in cands if cand_counts[str(x)] >= MIN_COUNT)
+        #litemSet[k] = set(x for x in cands)
         for item in litemSet[k]:
             pattern_list[str(item)] = (cand_counts[str(item)], cand_list[str(item)])
         if len(litemSet[k]) == 0:

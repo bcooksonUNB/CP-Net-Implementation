@@ -44,9 +44,7 @@ public class PreferenceVariable<T> {
     }
 
     public String toString(){
-        String ret_string = name + " (";
-        for(T val : getValues()) ret_string += val.toString() + ",";
-        ret_string += ")";
+        String ret_string = name;
         return ret_string;
     }
 }

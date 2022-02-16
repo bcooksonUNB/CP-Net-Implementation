@@ -46,7 +46,13 @@ public class Outcome<T> {
         return variables;
     }
 
-    public boolean equals(Outcome<T> o2){
+    @Override
+    public boolean equals(Object o){
+        if(o == this) return true;
+        if (!(o instanceof Outcome)) {
+            return false;
+        }
+        Outcome<T> o2 = (Outcome<T>)o;
         if(this.size() != o2.size()) return false;
         PreferenceVariable<T>[] vars2 = o2.getVariables();
         for(int i=0;i<size();i++){
@@ -55,4 +61,18 @@ public class Outcome<T> {
         }
         return true;
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        for(PreferenceVariable<T> p : variables){
+            result = prime * result + p.hashCode();
+        }
+        for(T t : values){
+            result = prime * result + t.hashCode();
+        }
+        return result;
+    }
+
 }

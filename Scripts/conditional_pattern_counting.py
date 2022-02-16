@@ -30,8 +30,6 @@ def strongconnect(v, node_nums,index, S,parents_list,cycles):
     return index
         
 
-
-
 def get_one_less_sublists(l):
     if(len(l) <= 1): return []
     ret_list = []
@@ -63,7 +61,7 @@ def get_sequences_in_file(seqs,file):
     return ret_list
 
 def unconditional_chi_test(attribute, total_counts):
-    expected_ratio = 0.8247
+    expected_ratio = 0.8232
     expected_mal = expected_ratio*total_counts[attribute][0]
     expected_ben = (1 - expected_ratio)*total_counts[attribute][0]
     actual_mal = total_counts[attribute][1]
@@ -80,13 +78,18 @@ def conditional_chi_test(pat, pat2, total_counts, final_map):
     expected_ben = final_map[pat][pat2][0]*(1-expected_ratio)
     actual_mal = final_map[pat][pat2][1]
     actual_ben = final_map[pat][pat2][2]
+    if expected_mal == 0 and expected_ben == 0:
+        print(pat)
+        print(pat2)
+        print(total_counts[pat])
+        print(final_map[pat])
     if expected_mal == 0: chi_val = ((actual_ben - expected_ben)**2)/expected_ben
     elif expected_ben == 0: chi_val = ((actual_mal - expected_mal)**2)/expected_mal
     else: chi_val = ((actual_mal - expected_mal)**2)/expected_mal + ((actual_ben - expected_ben)**2)/expected_ben
     if chi_val >= 3.84: return True, chi_val
     return False, chi_val
 
-def runMain(dir_name, CONDITIONAL_SUPPORT):
+def runMain(dir_name, CONDITIONAL_SUPPORT, remove_zeros=False):
     file_name_list = os.listdir("../Input/training")
 
     #set of all attributes
@@ -97,8 +100,6 @@ def runMain(dir_name, CONDITIONAL_SUPPORT):
 
     #list of patterns that appear in each file, indexed by file name
     file_pattern_list = {x:[] for x in file_name_list}
-
-    LIMIT = 0.4
 
     for name in file_name_list:
         f = open("../Input/training/" + name)
@@ -153,8 +154,21 @@ def runMain(dir_name, CONDITIONAL_SUPPORT):
         counter += 1
         if DEBUG: print("{0} Attributes remaining for Unconditional Checks".format(len(list(pattern_list))-counter))
 
+    all_pattern_counts = {str(x):total_counts[str(x)] for x in total_counts}
     for pat in remove_list:
         del total_counts[str(pat)]
+
+    remove_list = []
+    if remove_zeros:
+        for pat in total_counts:
+            if total_counts[pat][1] == 0 or total_counts[pat][2] == 0:
+                remove_list.append(pat)
+    
+        for pat in remove_list:
+            del total_counts[str(pat)]
+            del all_pattern_counts[str(pat)]
+
+    only_conditionals = [x for x in all_pattern_counts if x not in total_counts]
 
     counter = 0
     for pat in pattern_list:
@@ -173,16 +187,21 @@ def runMain(dir_name, CONDITIONAL_SUPPORT):
                             else:
                                 final_map[str(pat)][str(pat2)][2] += 1
             for pat2 in final_map[str(pat)]:
-                if not conditional_chi_test(str(pat),str(pat2),total_counts,final_map)[0] \
-                        or float(final_map[str(pat)][str(pat2)][0])/float(total_counts[str(pat)][0]) < CONDITIONAL_SUPPORT:
+                if float(final_map[str(pat)][str(pat2)][0])/float(total_counts[str(pat)][0]) < CONDITIONAL_SUPPORT:
                     remove_list.append(pat2)
             for p in remove_list:
                 del final_map[str(pat)][str(p)]
+            remove_list = []
+            for pat2 in final_map[str(pat)]:
+                if not conditional_chi_test(str(pat),str(pat2),total_counts,final_map)[0]:
+                    remove_list.append(pat2)
+            for p in remove_list:
+                del final_map[str(pat)][str(p)]        
             counter += 1
             if DEBUG: print("{0} Attributes remaining for Conditional Checks".format(len(list(total_counts.keys()))-counter))
 
-    mal_map = {str(x):[True if float(total_counts[x][1])/total_counts[x][0] >= 0.8247 else False, 
-                        {str(y):True if float(final_map[str(x)][str(y)][1])/final_map[str(x)][str(y)][0] >= 0.8247 else False
+    mal_map = {str(x):[True if float(total_counts[x][1])/total_counts[x][0] >= 0.8232 else False, 
+                        {str(y):True if float(final_map[str(x)][str(y)][1])/final_map[str(x)][str(y)][0] >= 0.8232 else False
                         for y in final_map[str(x)]}] 
                         for x in final_map}
 
@@ -194,7 +213,7 @@ def runMain(dir_name, CONDITIONAL_SUPPORT):
             not_vals[0] = total_counts[pat][0] - final_map[pat][pat2][0]
             not_vals[1] = total_counts[pat][1] - final_map[pat][pat2][1]
             not_vals[2] = total_counts[pat][2] - final_map[pat][pat2][2]
-            not_mal_val = True if float(not_vals[1])/not_vals[0] >= 0.8247 else False
+            not_mal_val = True if float(not_vals[1])/not_vals[0] >= 0.8232 else False
             if not_mal_val == mal_val:
                 del_list.append(pat2)
         for p in del_list:
@@ -223,23 +242,45 @@ def runMain(dir_name, CONDITIONAL_SUPPORT):
         if node_nums[v]["index"] == None:
             index = strongconnect(v,node_nums,index,temp_stack,parents_list,cycles)
 
+    def dfs(node, parents_list, cur_stack,strongly_connected):
+        #print("parent list: " + str((node, parents_list[node])))
+        #print("strong list: " + str([x for x in parents_list[node] if x in strongly_connected]))
+        for p in [x for x in parents_list[node]]:
+            if p in cur_stack:
+                print("FOUND CYCLE" + str(cur_stack[cur_stack.index(p):] + [p]))
+                return cur_stack[cur_stack.index(p):] + [p]
+            cur_stack.append(p)
+            l = dfs(p,parents_list,cur_stack,strongly_connected)
+            if len(l) > 0: return l
+            del cur_stack[-1]
+        return []
+
+
+    cycles = [x for x in cycles if len(x) > 1]
     #print(cycles)
-    # flag = False
-    # for c in cycles:
-    #     if len(c) > 1:
-    #         flag = True
-    #         del final_map[c[0]][c[1]]
-    #         parents_list[c[1]].remove(c[0])
-    #for p in parents_list: print(p,parents_list[p])
-    # cycles = []
-    # node_nums = {x:{"index":None,"lowlink":None,"onstack":False} for x in parents_list}
-    # index = 0
-    # temp_stack = []
-    # for v in parents_list:
-    #     if node_nums[v]["index"] == None:
-    #         index = strongconnect(v,node_nums,index,temp_stack,parents_list,cycles)
-    # print(cycles)
-    #raise Exception()
+    final_cycles = []
+    for c in cycles:
+        for i in range(len(c)):
+            n = c[i]
+            flag = False
+            while not flag:
+                cur_stack = [n]
+                l = dfs(n,parents_list,cur_stack,c)
+                if len(l) == 0:
+                    flag = True
+                else:
+                    final_cycles.append(l)
+                    max = -1
+                    maxNode = -1
+                    for node in range(len(l)):
+                        if len(parents_list[l[node]]) > max:
+                            max = len(parents_list[l[node]])
+                            maxNode = node
+                    #print(l[maxNode],l[maxNode+1])
+                    del final_map[str(l[maxNode+1])][str(l[maxNode])]
+                    parents_list[l[maxNode]].remove(l[maxNode+1])
+    #print(final_cycles)
+    
         
         
 

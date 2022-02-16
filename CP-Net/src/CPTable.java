@@ -2,8 +2,8 @@ import java.util.ArrayList;
 
 public class CPTable<T> {
 
-    private PreferenceVariable<T>[] parents;
-    private DomainOrdering<T>[] ordering;
+    protected PreferenceVariable<T>[] parents;
+    protected DomainOrdering<T>[] ordering;
     private double[] manualCalc;
     private boolean isManualCalc = false;
     private T testValue;

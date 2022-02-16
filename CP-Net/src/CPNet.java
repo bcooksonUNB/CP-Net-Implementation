@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class CPNet<T> {
 
@@ -29,20 +31,20 @@ public class CPNet<T> {
         return true;
     }
 
-//    public boolean setConnections(PreferenceVariable child, PreferenceVariable[] parents, double[] manCalcs, T testValue){
-//        //add in check for cycles
-//        if(!isNodeInNetwork(child)) return false;
-//        for(PreferenceVariable parent : parents) {
-//            if(!isNodeInNetwork(parent)) return false;
-//        }
-//        for(PreferenceVariable parent : parents) {
-//            adjTable.addConnection(parent,child);
-//        }
-//        int nodeIndex = getNodeIndex(child);
-//        if(nodeIndex == -1) return false;
-//        cptTables[nodeIndex] = new CPTable<T>(parents, manCalcs, testValue);
-//        return true;
-//    }
+    public boolean setCountingConnections(PreferenceVariable child, PreferenceVariable[] parents, DomainOrdering<Boolean>[] values){
+        //add in check for cycles
+        if(!isNodeInNetwork(child)) return false;
+        for(PreferenceVariable parent : parents) {
+            if(!isNodeInNetwork(parent)) return false;
+        }
+        for(PreferenceVariable parent : parents) {
+            adjTable.addConnection(parent,child);
+        }
+        int nodeIndex = getNodeIndex(child);
+        if(nodeIndex == -1) return false;
+        cptTables[nodeIndex] = (CPTable<T>)(new CountingCPTable(parents, values));
+        return true;
+    }
 
     public DomainOrdering<T> getTableValue(PreferenceVariable node, ArrayList<T> values){
         CPTable<T> table = getTable(node);
@@ -224,6 +226,7 @@ public class CPNet<T> {
     }
 
     public Outcome<T>[] orderingQuerySort(Outcome<T>[] outcomes){
+        //HashMap<Integer, Outcome<T>> orderings = new HashMap();
         //orders by insertion sort
         int n = outcomes.length;
         for(int i=1;i<n;i++){
@@ -239,15 +242,35 @@ public class CPNet<T> {
     }
 
     public boolean dominanceQuery(Outcome<T> o1, Outcome<T> o2){
+        if(o1.equals(o2)) return false;
         Outcome<T> tempOutcome = o2.copyOutcome();
-        Outcome<T>[] flips = getImprovingFlipsForOutcome(tempOutcome);
+        ArrayList<Outcome<T>> flips = getImprovingFlipsForOutcome(tempOutcome);
         ArrayList<Outcome<T>> queue = new ArrayList<>();
-        queue.addAll(Arrays.asList(flips));
+        HashSet<Outcome<T>> used = new HashSet<>();
+        //System.out.println("___Outcome___\n" + o2);
+        //System.out.println("___Flips_____\n" + Arrays.asList(flips) + "---------");
+        used.add(tempOutcome);
+        for(Outcome<T> f : flips){
+            if(!used.contains(f)){
+                queue.add(f);
+                used.add(f);
+            }
+        }
         while(queue.size() > 0){
             Outcome<T> currentOutcome = queue.remove(0);
             if (currentOutcome.equals(o1)) return true;
             flips = getImprovingFlipsForOutcome(currentOutcome);
-            queue.addAll(Arrays.asList(flips));
+            //System.out.println("___Outcome___\n" + currentOutcome);
+            //System.out.println("___Flips_____\n" + Arrays.asList(flips) + "---------");
+            for(Outcome<T> f : flips){
+                if(!used.contains(f)){
+                    queue.add(f);
+                    used.add(f);
+                }
+            }
+            //queue.addAll(Arrays.asList(flips));
+            //System.out.println(used.size());
+            //queue.removeAll(used);
         }
         return false;
     }
@@ -277,8 +300,8 @@ public class CPNet<T> {
         return outcomes;
     }
 
-    private Outcome<T>[] getImprovingFlipsForOutcome(Outcome<T> o){
-        ArrayList<Outcome> temp_list = new ArrayList<>();
+    private ArrayList<Outcome<T>> getImprovingFlipsForOutcome(Outcome<T> o){
+        ArrayList<Outcome<T>> temp_list = new ArrayList<>();
         PreferenceVariable<T>[] vars = o.getVariables();
 
         for(int i=0;i<o.size();i++){
@@ -302,7 +325,7 @@ public class CPNet<T> {
         }
         Outcome<T>[] ret_list = new Outcome[temp_list.size()];
         ret_list = temp_list.toArray(ret_list);
-        return ret_list;
+        return temp_list;
     }
 
     private boolean isFlipImproved(Outcome<T> o, PreferenceVariable<T> var, T newVal){

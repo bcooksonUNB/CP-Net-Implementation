@@ -37,7 +37,7 @@ public class CPDriver {
 
 //        Outcome<String> opt = net.getOptimalSolution();
 //
-        String[] o1Vals = {"White","Black","Red"};
+        String[] o1Vals = {"White","White","White"};
         Outcome<String> o1 = net.createOutcome(o1Vals);
         String[] o2Vals = {"White","Black","White"};
         Outcome<String> o2 = net.createOutcome(o2Vals);
@@ -45,10 +45,10 @@ public class CPDriver {
 //        boolean[] out = net.getOrderingQuery(o1,o2);
 //        System.out.println(out[0] + " " + out[1]);
 //
-        Outcome<String>[] outcomes = net.getAllOutcomes();
-        outcomes = net.dominanceSort(outcomes);
-        for(Outcome o : outcomes) System.out.println(o);
-//        boolean dom = net.dominanceQuery(o1,o2);
+//        Outcome<String>[] outcomes = net.getAllOutcomes();
+//        outcomes = net.dominanceSort(outcomes);
+//        for(Outcome o : outcomes) System.out.println(o);
+        boolean dom = net.dominanceQuery(o2,o1);
 //        boolean dom2 = net.dominanceQuery(o2,o1);
 //        System.out.println(dom);
 //        System.out.println(dom2);

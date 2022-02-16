@@ -7,7 +7,7 @@ public class Driver3 {
 
     static Boolean[] b1 = {true,false};
     static Boolean[] b2 = {false,true};
-    static String outputFolder = "../Output/support50length1/";
+    static String outputFolder = "../Output/support40length1/";
 
     public static void main(String[] args) throws Exception{
         ArrayList<EventPattern> patterns = new ArrayList<EventPattern>();
@@ -129,12 +129,12 @@ public class Driver3 {
             outcomes[counter] = new EventOutcome(pattern_list,valueList,fileName);
             counter += 1;
         }
-
-        outcomes = (EventOutcome[])net.orderingQuerySort(outcomes);
-        for(EventOutcome eo : outcomes){
-            System.out.println(eo.getEventName());
-            System.out.println(eo);
-        }
+        System.out.println(net.getOptimalSolution());
+        //outcomes = (EventOutcome[])net.dominanceSort(outcomes);
+        //for(EventOutcome eo : outcomes){
+        //    System.out.println(eo.getEventName());
+            //System.out.println(eo);
+        //}
 //        EventPattern p = null;
 //        for(EventPattern pat : pattern_list)
 //            if(pat.getName().equals("('RegOpenKeyW';)")){
