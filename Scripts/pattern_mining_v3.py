@@ -3,7 +3,7 @@ import math
 import itertools
 import sys
 
-DEBUG = True
+#DEBUG = True
 #MIN_SUPPORT = 0.4
 #MAX_K = 2
 
@@ -45,7 +45,7 @@ def is_sequence_in_file(seq, file):
         if current == len(seq): return True
     return False
 
-def runMain(dir_name, MIN_SUPPORT, MAX_K):
+def runMain(dir_name, MIN_SUPPORT, MAX_K, DEBUG=True):
     file_name_list = os.listdir("../Input/training")
     fileList = {}
 

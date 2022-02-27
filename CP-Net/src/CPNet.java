@@ -1,13 +1,10 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 public class CPNet<T> {
 
-    private PreferenceVariable<T>[] nodes;
-    private CPTable<T>[] cptTables;
-    private AdjTable adjTable;
+    protected PreferenceVariable<T>[] nodes;
+    protected CPTable<T>[] cptTables;
+    protected AdjTable adjTable;
 
     public CPNet(PreferenceVariable<T>[] variables, CPTable<T>[] initial_tables){
         nodes = variables;
@@ -174,6 +171,14 @@ public class CPNet<T> {
         results[1] = compareOutcomes(o2,o1);
         return results;
     }
+
+    public boolean[] getDominanceQuery(Outcome<T> o1, Outcome<T> o2){
+        boolean[] results = new boolean[2];
+        results[0] = dominanceQuery(o1,o2);
+        results[1] = dominanceQuery(o2,o1);
+        return results;
+    }
+
 
     public boolean compareOutcomes(Outcome<T> o1, Outcome<T> o2){
         //Step 1: Preform top down traversal to get all the variables who have the same values assigned to
@@ -364,6 +369,25 @@ public class CPNet<T> {
             outcomeList[i] = new Outcome<T>(nodes, valueList);
         }
         return outcomeList;
+    }
+
+    public Outcome<T>[] getRandomOutcomes(int numOutcomes){
+//        long listLength = 1;
+//        for(int i=0;i<nodes.length;i++){
+//            listLength *= nodes[i].getValues().length;
+//        }
+//        if(listLength <= numOutcomes) return getAllOutcomes();
+        Random r = new Random();
+        Outcome<T>[] ret_list = new Outcome[numOutcomes];
+        for(int i=0;i<numOutcomes;i++){
+            ArrayList<T> valueList = new ArrayList<>();
+            for(int j=0;j<nodes.length;j++){
+                int rand = r.nextInt(nodes[j].getValues().length);
+                valueList.add(nodes[j].getValues()[rand]);
+            }
+            ret_list[i] = new Outcome<T>(nodes,valueList);
+        }
+        return ret_list;
     }
 
     public PreferenceVariable<T> getNodeByName(String name){

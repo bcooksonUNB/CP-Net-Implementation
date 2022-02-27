@@ -10,7 +10,7 @@ public class CPTable<T> {
 
     public CPTable(PreferenceVariable<T>[] indList){
         parents = indList;
-        updateTableSize(parents);
+        //updateTableSize(parents);
     }
 
     public CPTable(DomainOrdering<T> single_ordering){

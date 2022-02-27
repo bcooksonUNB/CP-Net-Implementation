@@ -8,11 +8,15 @@ public class Driver6 {
 
     static Boolean[] b1 = {true,false};
     static Boolean[] b2 = {false,true};
-    static String outputFolder = "../Output/support10length1test2/";
+    static String outputFolder = "../Output/s10c10l1/";
 
     public static void main(String[] args) throws Exception{
         ArrayList<EventPattern> patterns = new ArrayList<EventPattern>();
         ArrayList<HashMap<String,Boolean>> condMaps = new ArrayList();
+
+        int connection_count = 0;
+        int parentless = 0;
+        int childless = 0;
 
         File f = new File(outputFolder + "cp_net_input.csv");
         Scanner scanner = new Scanner(f);
@@ -26,27 +30,29 @@ public class Driver6 {
                 String condName = lineList[i];
                 boolean condMal = lineList[i+1].equals("malicious") ? true : false;
                 condMap.put(condName,condMal);
+                connection_count += 1;
             }
             patterns.add(new EventPattern(name,baseMal));
             condMaps.add(condMap);
         }
 
-        CPTable<Boolean>[] initial_tables = new CPTable[patterns.size()];
+        CountingCPTable[] initial_tables = new CountingCPTable[patterns.size()];
         for(int i=0;i<patterns.size();i++){
+
             if(patterns.get(i).getBaseMal()){
-                initial_tables[i] = new CPTable<Boolean>(new DomainOrdering<Boolean>(b1));
+                initial_tables[i] = new CountingCPTable(new DomainOrdering<Boolean>(b1));
             }
             else{
-                initial_tables[i] = new CPTable<Boolean>(new DomainOrdering<Boolean>(b2));
+                initial_tables[i] = new CountingCPTable(new DomainOrdering<Boolean>(b2));
             }
         }
         EventPattern[] pattern_list = new EventPattern[patterns.size()];
         pattern_list = patterns.toArray(pattern_list);
 
-        CPNet<Boolean> net = new CPNet<Boolean>(pattern_list, initial_tables);
+        CPNet<Boolean> net = new EventCPNet(pattern_list, initial_tables);
 
         for(int i=0;i<pattern_list.length;i++){
-            System.out.println(pattern_list.length-i);
+            //System.out.println(pattern_list.length-i);
             //System.out.println(pattern_list[i] + " is done (" + Integer.toString(pattern_list.length-i) + " remaining.)");
             boolean[] malList = new boolean[condMaps.get(i).keySet().size()];
             EventPattern[] parents = new EventPattern[condMaps.get(i).keySet().size()];
@@ -64,47 +70,16 @@ public class Driver6 {
             if(parents.length == 0){
                 continue;
             }
-            boolean[] flagList = new boolean[parents.length];
-            int[] countList = new int[parents.length];
-            for (int j = 0; j < flagList.length; j++) {
-                flagList[j] = false;
-                countList[j] = 0;
-            }
-            DomainOrdering<Boolean>[] orderList = new DomainOrdering[(int) Math.pow(2, parents.length)];
-            for (int j = 0; j < Math.pow(2, parents.length); j++) {
-                for (int a = 0; a < parents.length; a++) {
-                    if (countList[a] == Math.pow(2, a)) {
-                        flagList[a] = true;
-                        countList[a] -= 1;
-                    }
-                    else if(countList[a] == 0){
-                        flagList[a] = false;
-                        countList[a] += 1;
-                    }
-                    else if(flagList[a]) {
-                        countList[a] -= 1;
-                    }
-                    else if(!flagList[a]){
-                        countList[a] += 1;
-                    }
-                }
-                int mal_count = 0;
-                for (int a = 0; a < parents.length; a++) {
-                    if (flagList[a]) {
-                        mal_count += malList[a] ? 1 : -1;
-                    } else {
-                        mal_count += malList[a] ? -1 : 1;
-                    }
-                }
-
-                if(mal_count > 0){
-                    orderList[j] = new DomainOrdering<Boolean>(b1);
+            DomainOrdering<Boolean>[] domainMalList = new DomainOrdering[malList.length];
+            for(int j=0;j< malList.length;j++){
+                if(malList[j]){
+                    domainMalList[j] = new DomainOrdering<Boolean>(b1);
                 }
                 else{
-                    orderList[j] = new DomainOrdering<Boolean>(b2);
+                    domainMalList[j] = new DomainOrdering<Boolean>(b2);
                 }
             }
-            net.setConnections(pattern_list[i], parents, orderList);
+            net.setConnections(pattern_list[i], parents, domainMalList);
         }
 
         File trainingFolder = new File(outputFolder + "testingdata/training");
@@ -152,7 +127,6 @@ public class Driver6 {
             outcomes[counter] = new EventOutcome(pattern_list,valueList,fileName);
             counter += 1;
         }
-
 
         HashMap<Outcome<Boolean>,Integer[]> mal_compare = new HashMap<>();
         HashMap<Outcome<Boolean>,Integer[]> ben_compare = new HashMap<>();
@@ -213,38 +187,61 @@ public class Driver6 {
         ArrayList<EventOutcome> ben_predictions = new ArrayList<>();
         ArrayList<EventOutcome> mal_confident = new ArrayList<>();
         ArrayList<EventOutcome> ben_confident = new ArrayList<>();
-
+        double total_diff = 0;
+        int diff_count = 0;
+        int tp = 0;
+        int mal_count = 0;
+        int[] total_mals = new int[4];
+        int[] total_bens = new int[4];
         ArrayList<EventOutcome> ordered_list = new ArrayList<>();
         HashMap<EventOutcome, Double> scoreMap = new HashMap<>();
         for(EventOutcome o : outcomes){
+            total_mals[0] += mal_compare.get(o)[0];
+            total_mals[1] += mal_compare.get(o)[1];
+            total_mals[2] += mal_compare.get(o)[2];
+            total_mals[3] += mal_compare.get(o)[3];
+
+            total_bens[0] += ben_compare.get(o)[0];
+            total_bens[1] += ben_compare.get(o)[1];
+            total_bens[2] += ben_compare.get(o)[2];
+            total_bens[3] += ben_compare.get(o)[3];
+
             double score = 0;
             System.out.println(o.getEventName());
-            System.out.println("Mal Beat: " + mal_compare.get(o)[0] + " (" + ((float)mal_compare.get(o)[0]/256) + "%)") ;
+            System.out.println("Mal Beat: " + mal_compare.get(o)[0] + " (" + ((float)mal_compare.get(o)[0]/256) + ")") ;
             score += ((float)mal_compare.get(o)[0]/256);
-            System.out.println("Mal Lost: " + mal_compare.get(o)[1] + " (" + ((float)mal_compare.get(o)[1]/256) + "%)");
+            System.out.println("Mal Lost: " + mal_compare.get(o)[1] + " (" + ((float)mal_compare.get(o)[1]/256) + ")");
             score -= ((float)mal_compare.get(o)[1]/256);
-            System.out.println("Mal Indifferent: " + mal_compare.get(o)[2] + " (" + ((float)mal_compare.get(o)[2]/256) + "%)");
-            System.out.println("Mal Equals Exact: " + mal_compare.get(o)[3] + " (" + ((float)mal_compare.get(o)[3]/256) + "%)");
+            System.out.println("Mal Indifferent: " + mal_compare.get(o)[2] + " (" + ((float)mal_compare.get(o)[2]/256) + ")");
+            System.out.println("Mal Equals Exact: " + mal_compare.get(o)[3] + " (" + ((float)mal_compare.get(o)[3]/256) + ")");
             score += ((float)mal_compare.get(o)[3]/256);
-            System.out.println("Ben Beat: " + ben_compare.get(o)[0] + " (" + ((float)ben_compare.get(o)[0]/55) + "%)");
+            System.out.println("Ben Beat: " + ben_compare.get(o)[0] + " (" + ((float)ben_compare.get(o)[0]/55) + ")");
             score += ((float)ben_compare.get(o)[0]/55);
-            System.out.println("Ben Lost: " + ben_compare.get(o)[1] + " (" + ((float)ben_compare.get(o)[1]/55) + "%)");
+            System.out.println("Ben Lost: " + ben_compare.get(o)[1] + " (" + ((float)ben_compare.get(o)[1]/55) + ")");
             score -= ((float)ben_compare.get(o)[1]/55);
-            System.out.println("Ben Indifferent: " + ben_compare.get(o)[2] + " (" + ((float)ben_compare.get(o)[2]/55) + "%)");
-            System.out.println("Ben Equals Exact: " + ben_compare.get(o)[3] + " (" + ((float)ben_compare.get(o)[3]/55) + "%)");
+            System.out.println("Ben Indifferent: " + ben_compare.get(o)[2] + " (" + ((float)ben_compare.get(o)[2]/55) + ")");
+            System.out.println("Ben Equals Exact: " + ben_compare.get(o)[3] + " (" + ((float)ben_compare.get(o)[3]/55) + ")");
             score -= ((float)ben_compare.get(o)[3]/55);
             System.out.println();
-            if(score > 0 && score < 1.2){
+            if(score > 0){
                 mal_predictions.add(o);
+                if(o.getEventName().contains("ben")){
+                    total_diff += Math.abs(score);
+                    diff_count += 1;
+                }
+                else{
+                    tp += 1;
+                }
             }
-            else if (score <= 0 && score > -1.2){
+            else if (score <= 0){
                 ben_predictions.add(o);
+                if(o.getEventName().contains("mal")){
+                    total_diff += Math.abs(score);
+                    diff_count += 1;
+                }
             }
-            else if(score >= 1.2){
-                mal_confident.add(o);
-            }
-            else if(score <= -1.2){
-                ben_confident.add(o);
+            if(o.getEventName().contains("mal")){
+                mal_count += 1;
             }
             scoreMap.put(o,score);
         }
@@ -293,12 +290,27 @@ public class Driver6 {
             System.out.println(o.getEventName() + " " + scoreMap.get(o));
         }
 
+        System.out.println(pattern_list.length);
+        System.out.println("Mal");
+        double average_indifference = 0;
+        for(int i=0;i<4;i++){
+            System.out.print((float)total_mals[i]/outcomes.length + " ");
+        }
+        average_indifference += (((float)total_mals[2]/outcomes.length)/(float)(total_mals[0]/outcomes.length+total_mals[1]/outcomes.length+total_mals[2]/outcomes.length))*((float)(total_mals[0]/outcomes.length+total_mals[1]/outcomes.length+total_mals[2]/outcomes.length))/(trainingOutcomes.length);
+        System.out.println("\nBens");
+        for(int i=0;i<4;i++){
+            System.out.print((float)total_bens[i]/outcomes.length + " ");
+        }
+        System.out.println( (((float)total_mals[2]/outcomes.length)/trainingOutcomes.length)  );
+        average_indifference += (((float)total_bens[2]/outcomes.length)/(float)(total_bens[0]/outcomes.length+total_bens[1]/outcomes.length+total_bens[2]/outcomes.length))*((float)(total_bens[0]/outcomes.length+total_bens[1]/outcomes.length+total_bens[2]/outcomes.length))/trainingOutcomes.length;
+
+
 //        System.out.println("Starting");
-//        Outcome<Boolean>[] allOutcomes = net.getAllOutcomes();
+//        Outcome<Boolean>[] allOutcomes = net.getRandomOutcomes(100);
 //        int total_worse = 0;
 //        int total_better = 0;
 //        int total_indifferent = 0;
-//        for(int i=0;i<allOutcomes.length;i++){
+//        for(int i=0;i< allOutcomes.length;i++){
 //            Outcome<Boolean> o = allOutcomes[i];
 //            //System.out.println(o);
 //            int worseCount = 0;
@@ -306,14 +318,13 @@ public class Driver6 {
 //            int inCount = 0;
 //            for(int j=0;j<allOutcomes.length;j++){
 //                Outcome<Boolean> o2 = allOutcomes[j];
-//                boolean test = net.dominanceQuery(o,o2);
-//                if(test){
+//                boolean test[] = net.getOrderingQuery(o,o2);
+//                if(test[1] && !test[0]){
 //                    //System.out.println(o2 + ": Better");
 //                    betterCount += 1;
 //                }
 //                else{
-//                    test = net.dominanceQuery(o2,o);
-//                    if(test){
+//                    if(test[0] && !test[1]){
 //                        //System.out.println(o2 + ": Worse");
 //                        worseCount += 1;
 //                    }
@@ -323,7 +334,8 @@ public class Driver6 {
 //                    }
 //                }
 //            }
-//            System.out.println(allOutcomes.length-i + " remaining");
+//            if(i%50==0)
+//                System.out.println(allOutcomes.length-i + " remaining");
 //            total_worse += worseCount;
 //            total_better += betterCount;
 //            total_indifferent += inCount;
@@ -333,6 +345,27 @@ public class Driver6 {
 //
 //        System.out.println((double)total_worse/allOutcomes.length + " " + (double)total_better/allOutcomes.length + " " + (double)total_indifferent/allOutcomes.length);
 
+        System.out.println("CP-Net Length: " + pattern_list.length);
+        System.out.println("Connections Count: " + (float)connection_count/ pattern_list.length);
+
+        for(int j=0;j<net.nodes.length;j++){
+            if(net.getChildren(net.nodes[j]).length == 0){
+                parentless += 1;
+            }
+        }
+        for(int j=0;j<net.nodes.length;j++){
+            if(net.getParents(net.nodes[j]).length == 0){
+                childless += 1;
+            }
+        }
+        System.out.println("Childless: " + parentless);
+        System.out.println("Parentless: " + childless);
+        System.out.println("Diff Count: " + diff_count);
+        System.out.println("Diff Score: " + total_diff);
+        System.out.println("Accruacy: " + (float)(outcomes.length-diff_count)/outcomes.length);
+        System.out.println("Percision: " + (float)tp/mal_predictions.size());
+        System.out.println("Recall: " + (float)tp/mal_count);
+        System.out.println("Indifference: " + average_indifference);
 //        Boolean[] o1List = {true,true,true,true};
 //        ArrayList<Boolean> o1L = new ArrayList<>(Arrays.asList(o1List));
 //        Outcome<Boolean> o1 = new Outcome<Boolean>(pattern_list,o1L);

@@ -8,7 +8,7 @@ public class Driver5 {
 
     static Boolean[] b1 = {true,false};
     static Boolean[] b2 = {false,true};
-    static String outputFolder = "../Output/s75c75l1zeros/";
+    static String outputFolder = "../Output/s40c60l2/";
 
     public static void main(String[] args) throws Exception{
         ArrayList<EventPattern> patterns = new ArrayList<EventPattern>();
