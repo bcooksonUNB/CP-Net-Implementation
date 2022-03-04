@@ -7,8 +7,7 @@ public class EventCPNet extends CPNet<Boolean>{
         super(variables,initial_tables);
     }
 
-    @Override
-    public boolean setConnections(PreferenceVariable child, PreferenceVariable[] parents, DomainOrdering<Boolean>[] mal_list){
+    public boolean setCountingConnections(PreferenceVariable child, PreferenceVariable[] parents, DomainOrdering<Boolean>[] mal_list, DomainOrdering<Boolean> default_ordering){
         //add in check for cycles
         if(!isNodeInNetwork(child)) return false;
         for(PreferenceVariable parent : parents) {
@@ -19,7 +18,7 @@ public class EventCPNet extends CPNet<Boolean>{
         }
         int nodeIndex = getNodeIndex(child);
         if(nodeIndex == -1) return false;
-        cptTables[nodeIndex] = new CountingCPTable(parents,mal_list);
+        cptTables[nodeIndex] = new CountingCPTable(parents,mal_list,default_ordering);
         return true;
     }
 }

@@ -46,6 +46,10 @@ public class Outcome<T> {
         return variables;
     }
 
+    public ArrayList<T> getValues(){
+        return values;
+    }
+
     @Override
     public boolean equals(Object o){
         if(o == this) return true;

@@ -33,7 +33,7 @@ def get_sequences_in_file(seqs,file):
 
 #dir_name = "support30length1"
 
-def runMain(dir_name):
+def runMain(dir_name, filePatternList=None):
     testing_name_list = os.listdir("../Input/testing")
     training_name_list = os.listdir("../Input/training")
 
@@ -66,7 +66,7 @@ def runMain(dir_name):
         f.close()
 
     pattern_list = []
-    f = open("../Output/{0}/pattern_list.csv".format(dir_name))
+    f = open("../Output/{0}/final_pattern_list.csv".format(dir_name))
     next_pattern = f.readline()
     while next_pattern:
         next_pattern = next_pattern.strip()
@@ -81,9 +81,12 @@ def runMain(dir_name):
         testing_pattern_list[file] = get_sequences_in_file(pattern_list,testing_attribute_list[file])
         if DEBUG: print("Done finding patterns for " + file)
 
-    for file in training_name_list:
-        training_pattern_list[file] = get_sequences_in_file(pattern_list,training_attribute_list[file])
-        if DEBUG: print("Done finding patterns for " + file)
+    if not filePatternList:
+        for file in training_name_list:
+            training_pattern_list[file] = get_sequences_in_file(pattern_list,training_attribute_list[file])
+            if DEBUG: print("Done finding patterns for " + file)
+    else:
+        training_pattern_list = {x:filePatternList[x] for x in filePatternList}
 
     os.mkdir("../Output/{0}/testingdata".format(dir_name))
     os.mkdir("../Output/{0}/testingdata/training".format(dir_name))

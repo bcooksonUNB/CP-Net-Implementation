@@ -5,22 +5,22 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class TestingDriver {
+public class TestingDriverDominance {
 
     static Boolean[] b1 = {true,false};
     static Boolean[] b2 = {false,true};
-    static double[] support_list = {0.7,0.6,0.5,0.4,0.3,0.2,0.1};
-    static double[] conditional_support_list = {0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1};
+    static double[] support_list = {0.65,0.6,0.55,0.5,0.45,0.4,0.35,0.3,0.25,0.2,0.15,0.1,0.05};
+    static double[] conditional_support_list = {0.8,0.75,0.7,0.65,0.6,0.55};
     static int max_length = 1;
 
     public static void main(String[] args) throws Exception{
         for(double support : support_list) {
             for (double conditional_support : conditional_support_list) {
-                String mainOutputFolder = "../Output/s" + Integer.toString((int) (support * 100)) + "c" + Integer.toString((int) (conditional_support * 100)) + "l" + max_length + "_cycle3";
-                FileWriter myWriter = new FileWriter(mainOutputFolder + "_output.txt");
+                String mainOutputFolder = "../Output/CycleTestChiSquare/s" + Integer.toString((int) (support * 100)) + "c" + Integer.toString((int) (conditional_support * 100)) + "l" + max_length + "";
+                FileWriter myWriter = new FileWriter(mainOutputFolder + "_dominance_output.txt");
                 myWriter.write("Unconditional Support, Conditional Support, Max Length, Node Count, Average Connection, Parentless, Childless, Diff Count, Diff Score, Accuracy, Percision, Recall, Average Indifference\n");
                 for (int folderNum = 0; folderNum < 5; folderNum++) {
-                    FileWriter logWriter = new FileWriter(mainOutputFolder + "_partition_" + folderNum + "_log.txt");
+                    FileWriter logWriter = new FileWriter(mainOutputFolder + "_partition_" + folderNum + "_dominance_log.txt");
                     String outputFolder = mainOutputFolder + "_partition_" + folderNum + "/";
                     ArrayList<EventPattern> patterns = new ArrayList<EventPattern>();
                     ArrayList<HashMap<String, Boolean>> condMaps = new ArrayList();
@@ -150,36 +150,44 @@ public class TestingDriver {
                     for (EventOutcome o : outcomes) {
                         Integer[] mal_list = {0, 0, 0, 0};
                         Integer[] ben_list = {0, 0, 0, 0};
-                        //System.out.println((outcomes.length-count) + " Remaining");
+                        System.out.println((outcomes.length-count) + " Remaining");
                         int tCount = 0;
                         for (EventOutcome to : trainingOutcomes) {
                             if (to.getEventName().contains("mal")) {
-                                boolean[] test = net.getOrderingQuery(o, to);
-                                if (test[1] && !test[0]) {
-                                    mal_list[0] += 1;
-                                } else {
-                                    if (test[0] && !test[1]) {
-                                        mal_list[1] += 1;
-                                    } else {
-                                        mal_list[2] += 1;
-                                    }
-                                }
                                 if (o.equals(to)) {
                                     mal_list[3] += 1;
+                                    mal_list[2] += 1;
                                 }
-                            } else {
-                                boolean[] test = net.getOrderingQuery(o, to);
-                                if (test[1] && !test[0]) {
-                                    ben_list[0] += 1;
-                                } else {
-                                    if (test[0] && !test[1]) {
-                                        ben_list[1] += 1;
+                                else{
+                                    boolean test = net.dominanceQuery(o, to);
+                                    if (test) {
+                                        mal_list[0] += 1;
                                     } else {
-                                        ben_list[2] += 1;
+                                        test = net.dominanceQuery(to, o);
+                                        if (test) {
+                                            mal_list[1] += 1;
+                                        } else {
+                                            mal_list[2] += 1;
+                                        }
                                     }
                                 }
+
+                            } else {
                                 if (o.equals(to)) {
                                     ben_list[3] += 1;
+                                }
+                                else{
+                                    boolean test = net.dominanceQuery(o, to);
+                                    if (test) {
+                                        ben_list[0] += 1;
+                                    } else {
+                                        test = net.dominanceQuery(to, o);
+                                        if (test) {
+                                            ben_list[1] += 1;
+                                        } else {
+                                            ben_list[2] += 1;
+                                        }
+                                    }
                                 }
                             }
                             tCount += 1;

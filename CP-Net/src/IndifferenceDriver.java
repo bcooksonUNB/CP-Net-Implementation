@@ -7,8 +7,8 @@ import java.util.Scanner;
 public class IndifferenceDriver {
     static Boolean[] b1 = {true,false};
     static Boolean[] b2 = {false,true};
-    static double support = 0.65;
-    static double[] conditional_support_list = {0.70};
+    static double support = 0.05;
+    static double[] conditional_support_list = {0.8,0.75,0.7,0.65,0.6,0.55,0.5,0.45,0.4,0.35,0.3,0.25,0.2,0.15,0.1,0.05};
     static int max_length = 1;
 
     public static void main(String[] args) throws Exception{

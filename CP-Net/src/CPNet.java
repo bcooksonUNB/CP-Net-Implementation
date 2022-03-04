@@ -28,20 +28,20 @@ public class CPNet<T> {
         return true;
     }
 
-    public boolean setCountingConnections(PreferenceVariable child, PreferenceVariable[] parents, DomainOrdering<Boolean>[] values){
-        //add in check for cycles
-        if(!isNodeInNetwork(child)) return false;
-        for(PreferenceVariable parent : parents) {
-            if(!isNodeInNetwork(parent)) return false;
-        }
-        for(PreferenceVariable parent : parents) {
-            adjTable.addConnection(parent,child);
-        }
-        int nodeIndex = getNodeIndex(child);
-        if(nodeIndex == -1) return false;
-        cptTables[nodeIndex] = (CPTable<T>)(new CountingCPTable(parents, values));
-        return true;
-    }
+//    public boolean setCountingConnections(PreferenceVariable child, PreferenceVariable[] parents, DomainOrdering<Boolean>[] values){
+//        //add in check for cycles
+//        if(!isNodeInNetwork(child)) return false;
+//        for(PreferenceVariable parent : parents) {
+//            if(!isNodeInNetwork(parent)) return false;
+//        }
+//        for(PreferenceVariable parent : parents) {
+//            adjTable.addConnection(parent,child);
+//        }
+//        int nodeIndex = getNodeIndex(child);
+//        if(nodeIndex == -1) return false;
+//        cptTables[nodeIndex] = (CPTable<T>)(new CountingCPTable(parents, values));
+//        return true;
+//    }
 
     public DomainOrdering<T> getTableValue(PreferenceVariable node, ArrayList<T> values){
         CPTable<T> table = getTable(node);
@@ -252,32 +252,82 @@ public class CPNet<T> {
         ArrayList<Outcome<T>> flips = getImprovingFlipsForOutcome(tempOutcome);
         ArrayList<Outcome<T>> queue = new ArrayList<>();
         HashSet<Outcome<T>> used = new HashSet<>();
-        //System.out.println("___Outcome___\n" + o2);
-        //System.out.println("___Flips_____\n" + Arrays.asList(flips) + "---------");
-        used.add(tempOutcome);
-        for(Outcome<T> f : flips){
-            if(!used.contains(f)){
-                queue.add(f);
-                used.add(f);
+
+        ArrayList<PreferenceVariable<T>> topological = new ArrayList<PreferenceVariable<T>>();
+        ArrayList<PreferenceVariable<T>> finalList = new ArrayList<>();
+        for(PreferenceVariable<T> p : getTopNodes()) topological.add(p);
+        while(topological.size() != 0) {
+            PreferenceVariable<T> popped = topological.get(0);
+            topological.remove(popped);
+            finalList.add(popped);
+            PreferenceVariable<T>[] poppedChildren = getChildren(popped);
+            for (PreferenceVariable<T> p : poppedChildren) {
+                PreferenceVariable<T>[] pParents = getParents(p);
+                boolean flag = true;
+                for (PreferenceVariable<T> parent : pParents) {
+                    if (!finalList.contains(parent)) {
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag) {
+                    finalList.add(p);
+                }
             }
         }
+
+        HashMap<Outcome<T>, Integer> suffixMap = new HashMap<>();
+
+        used.add(tempOutcome);
+        suffixMap.put(tempOutcome,containsSuffix(tempOutcome,o1,finalList));
+
+        for(Outcome<T> f : flips){
+            if(!used.contains(f)){
+                int flipSuffixIndex = containsSuffix(f,o1,finalList);
+                if(flipSuffixIndex >= suffixMap.get(tempOutcome)) {
+                    queue.add(f);
+                    used.add(f);
+                    suffixMap.put(f, containsSuffix(f, o1, finalList));
+                }
+            }
+        }
+
         while(queue.size() > 0){
             Outcome<T> currentOutcome = queue.remove(0);
             if (currentOutcome.equals(o1)) return true;
+            int currentSuffIndex = suffixMap.get(currentOutcome);
+            suffixMap.remove(currentOutcome);
             flips = getImprovingFlipsForOutcome(currentOutcome);
             //System.out.println("___Outcome___\n" + currentOutcome);
             //System.out.println("___Flips_____\n" + Arrays.asList(flips) + "---------");
             for(Outcome<T> f : flips){
                 if(!used.contains(f)){
-                    queue.add(f);
-                    used.add(f);
+                    int flipSuffixIndex = containsSuffix(f,o1,finalList);
+                    if(flipSuffixIndex >= currentSuffIndex){
+                        queue.add(0,f);
+                        used.add(f);
+                        suffixMap.put(f,flipSuffixIndex);
+                    }
                 }
             }
             //queue.addAll(Arrays.asList(flips));
-            //System.out.println(used.size());
+            //System.out.println("Used: " + used.size());
             //queue.removeAll(used);
         }
         return false;
+    }
+
+    public int containsSuffix(Outcome<T> o, Outcome<T> o2, ArrayList<PreferenceVariable<T>> topOrder){
+        int suffexIndex = 0;
+        for(PreferenceVariable<T> p : topOrder){
+            if(o.getValue(p).equals(o2.getValue(p))){
+                suffexIndex += 1;
+            }
+            else{
+                break;
+            }
+        }
+        return suffexIndex;
     }
 
     public Outcome<T>[] dominanceSort(Outcome<T>[] outcomes){
@@ -305,7 +355,7 @@ public class CPNet<T> {
         return outcomes;
     }
 
-    private ArrayList<Outcome<T>> getImprovingFlipsForOutcome(Outcome<T> o){
+    public ArrayList<Outcome<T>> getImprovingFlipsForOutcome(Outcome<T> o){
         ArrayList<Outcome<T>> temp_list = new ArrayList<>();
         PreferenceVariable<T>[] vars = o.getVariables();
 

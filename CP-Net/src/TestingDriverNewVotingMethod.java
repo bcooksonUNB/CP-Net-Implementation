@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class TestingDriver {
+public class TestingDriverNewVotingMethod {
 
     static Boolean[] b1 = {true,false};
     static Boolean[] b2 = {false,true};
@@ -16,7 +16,7 @@ public class TestingDriver {
     public static void main(String[] args) throws Exception{
         for(double support : support_list) {
             for (double conditional_support : conditional_support_list) {
-                String mainOutputFolder = "../Output/s" + Integer.toString((int) (support * 100)) + "c" + Integer.toString((int) (conditional_support * 100)) + "l" + max_length + "_cycle3";
+                String mainOutputFolder = "../Output/s" + Integer.toString((int) (support * 100)) + "c" + Integer.toString((int) (conditional_support * 100)) + "l" + max_length + "_cycle4_reversemethod_v2";
                 FileWriter myWriter = new FileWriter(mainOutputFolder + "_output.txt");
                 myWriter.write("Unconditional Support, Conditional Support, Max Length, Node Count, Average Connection, Parentless, Childless, Diff Count, Diff Score, Accuracy, Percision, Recall, Average Indifference\n");
                 for (int folderNum = 0; folderNum < 5; folderNum++) {
