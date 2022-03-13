@@ -24,7 +24,31 @@ public class CountingCPTable extends CPTable<Boolean> {
         this.malList = null;
     }
 
-    //Version that looks at both the parent present and the parent absent
+//    //Version that looks at both the parent present and the parent absent, defaults to benign
+//    @Override
+//    public DomainOrdering<Boolean> getOrdering(ArrayList<Boolean> values){
+//        if(parents.length == 0) return ordering[0];
+//        if(values.size() != parents.length) return null;
+//        for(int i=0;i<values.size();i++){
+//            if(!parents[i].inPossibleValues(values.get(i))) return null;
+//        }
+//        int total = 0;
+//        for(int i=0;i<values.size();i++){
+//            DomainOrdering<Boolean> p = malList[i];
+//            if(values.get(i).equals(p.getTop())){
+//                total += 1;
+//            }
+//            else{
+//                total -= 1;
+//            }
+//        }
+//        if(total > 0){
+//            return new DomainOrdering<Boolean>(b1);
+//        }
+//        return new DomainOrdering<Boolean>(b2);
+//    }
+
+    //considers both scenarios, defaults to unconditional ordering
     @Override
     public DomainOrdering<Boolean> getOrdering(ArrayList<Boolean> values){
         if(parents.length == 0) return ordering[0];
@@ -45,7 +69,10 @@ public class CountingCPTable extends CPTable<Boolean> {
         if(total > 0){
             return new DomainOrdering<Boolean>(b1);
         }
-        return new DomainOrdering<Boolean>(b2);
+        if(total < 0) {
+            return new DomainOrdering<Boolean>(b2);
+        }
+        return ordering[0];
     }
 
     //version that only counts a vote when the parent is present

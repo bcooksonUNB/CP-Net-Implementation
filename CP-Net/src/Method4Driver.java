@@ -1,29 +1,26 @@
 import java.io.File;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
-public class TestingDriverDominance {
+public class Method4Driver {
 
     static Boolean[] b1 = {true,false};
     static Boolean[] b2 = {false,true};
-    static double[] support_list = {0.7,0.65,0.60,0.55,0.50,0.45};
-    static double[] conditional_support_list = {0.8,0.75,0.7,0.65,0.6};
+    static double[] support_list = {0.7,0.1};
+    static double[] conditional_support_list = {0.5,0.4,0.3};
     static int max_length = 1;
 
     public static void main(String[] args) throws Exception{
         for(double support : support_list) {
             for (double conditional_support : conditional_support_list) {
                 String mainOutputFolder = "../Output/s" + Integer.toString((int) (support * 100)) + "c" + Integer.toString((int) (conditional_support * 100)) + "l" + max_length + "_cycle1_method1";
-                FileWriter myWriter = new FileWriter(mainOutputFolder + "_dominance_output.txt");
+                FileWriter myWriter = new FileWriter(mainOutputFolder + "_output.txt");
                 myWriter.write("Unconditional Support, Conditional Support, Max Length, Node Count, Average Connection, Parentless, Childless, Diff Count, Diff Score, Accuracy, Percision, Recall, Average Indifference\n");
                 for (int folderNum = 0; folderNum < 5; folderNum++) {
-                    FileWriter logWriter = new FileWriter(mainOutputFolder + "_partition_" + folderNum + "_dominance_log.txt");
+                    FileWriter logWriter = new FileWriter(mainOutputFolder + "_partition_" + folderNum + "_log.txt");
                     String outputFolder = mainOutputFolder + "_partition_" + folderNum + "/";
                     ArrayList<EventPattern> patterns = new ArrayList<EventPattern>();
-                    ArrayList<HashMap<String, Boolean>> condMaps = new ArrayList();
+                    ArrayList<HashMap<String, String[]>> condMaps = new ArrayList();
 
                     int connection_count = 0;
                     int parentless = 0;
@@ -35,36 +32,40 @@ public class TestingDriverDominance {
                         String nextLine = scanner.nextLine().replace("\n", "");
                         String[] lineList = nextLine.split(",");
                         String name = lineList[0];
-                        boolean baseMal = lineList[1].equals("malicious") ? true : false;
-                        HashMap<String, Boolean> condMap = new HashMap<>();
-                        for (int i = 2; i < lineList.length; i += 2) {
+                        boolean baseMal = lineList[1].equals("mal") ? true : false;
+                        HashMap<String, String[]> condMap = new HashMap<>();
+                        for (int i = 2; i < lineList.length; i += 5) {
                             String condName = lineList[i];
-                            boolean condMal = lineList[i + 1].equals("malicious") ? true : false;
-                            condMap.put(condName, condMal);
+                            String[] malList = new String[4];
+                            malList[0] = lineList[i + 1];
+                            malList[1] = lineList[i + 2];
+                            malList[2] = lineList[i + 3];
+                            malList[3] = lineList[i + 4];
+                            condMap.put(condName, malList);
                             connection_count += 1;
                         }
                         patterns.add(new EventPattern(name, baseMal));
                         condMaps.add(condMap);
                     }
 
-                    CountingCPTable[] initial_tables = new CountingCPTable[patterns.size()];
+                    VotingCPTable[] initial_tables = new VotingCPTable[patterns.size()];
                     for (int i = 0; i < patterns.size(); i++) {
 
                         if (patterns.get(i).getBaseMal()) {
-                            initial_tables[i] = new CountingCPTable(new DomainOrdering<Boolean>(b1));
+                            initial_tables[i] = new VotingCPTable(new DomainOrdering<Boolean>(b1));
                         } else {
-                            initial_tables[i] = new CountingCPTable(new DomainOrdering<Boolean>(b2));
+                            initial_tables[i] = new VotingCPTable(new DomainOrdering<Boolean>(b2));
                         }
                     }
                     EventPattern[] pattern_list = new EventPattern[patterns.size()];
                     pattern_list = patterns.toArray(pattern_list);
 
-                    EventCPNet net = new EventCPNet(pattern_list, initial_tables);
+                    VotingCPNet net = new VotingCPNet(pattern_list, initial_tables);
 
                     for (int i = 0; i < pattern_list.length; i++) {
                         //System.out.println(pattern_list.length-i);
                         //System.out.println(pattern_list[i] + " is done (" + Integer.toString(pattern_list.length-i) + " remaining.)");
-                        boolean[] malList = new boolean[condMaps.get(i).keySet().size()];
+                        String[][] malList = new String[condMaps.get(i).keySet().size()][4];
                         EventPattern[] parents = new EventPattern[condMaps.get(i).keySet().size()];
                         int counter = 0;
                         for (String condName : condMaps.get(i).keySet()) {
@@ -80,14 +81,6 @@ public class TestingDriverDominance {
                         if (parents.length == 0) {
                             continue;
                         }
-                        DomainOrdering<Boolean>[] domainMalList = new DomainOrdering[malList.length];
-                        for (int j = 0; j < malList.length; j++) {
-                            if (malList[j]) {
-                                domainMalList[j] = new DomainOrdering<Boolean>(b1);
-                            } else {
-                                domainMalList[j] = new DomainOrdering<Boolean>(b2);
-                            }
-                        }
                         DomainOrdering<Boolean> tempOrdering;
                         if(pattern_list[i].getBaseMal()){
                             tempOrdering = new DomainOrdering<>(b1);
@@ -95,7 +88,7 @@ public class TestingDriverDominance {
                         else{
                             tempOrdering = new DomainOrdering<>(b2);
                         }
-                        net.setCountingConnections(pattern_list[i], parents, domainMalList, tempOrdering);
+                        net.setCountingConnections(pattern_list[i], parents, malList, tempOrdering);
                     }
 
                     File trainingFolder = new File(outputFolder + "testingdata/training");
@@ -150,52 +143,49 @@ public class TestingDriverDominance {
                     for (EventOutcome o : outcomes) {
                         Integer[] mal_list = {0, 0, 0, 0};
                         Integer[] ben_list = {0, 0, 0, 0};
-                        System.out.println((outcomes.length-count) + " Remaining");
+                        //System.out.println((outcomes.length-count) + " Remaining");
                         int tCount = 0;
                         for (EventOutcome to : trainingOutcomes) {
                             if (to.getEventName().contains("mal")) {
+                                boolean[] test = net.getOrderingQuery(o, to);
+                                if (test[1] && !test[0]) {
+                                    mal_list[0] += 1;
+                                } else {
+                                    if (test[0] && !test[1]) {
+                                        mal_list[1] += 1;
+                                    } else {
+                                        mal_list[2] += 1;
+                                    }
+                                }
                                 if (o.equals(to)) {
                                     mal_list[3] += 1;
-                                    mal_list[2] += 1;
                                 }
-                                else{
-                                    boolean test = net.dominanceQuery(o, to);
-                                    if (test) {
-                                        mal_list[0] += 1;
+                            } else {
+                                boolean[] test = net.getOrderingQuery(o, to);
+                                if (test[1] && !test[0]) {
+                                    ben_list[0] += 1;
+                                } else {
+                                    if (test[0] && !test[1]) {
+                                        ben_list[1] += 1;
                                     } else {
-                                        test = net.dominanceQuery(to, o);
-                                        if (test) {
-                                            mal_list[1] += 1;
-                                        } else {
-                                            mal_list[2] += 1;
-                                        }
+                                        ben_list[2] += 1;
                                     }
                                 }
-
-                            } else {
                                 if (o.equals(to)) {
                                     ben_list[3] += 1;
-                                }
-                                else{
-                                    boolean test = net.dominanceQuery(o, to);
-                                    if (test) {
-                                        ben_list[0] += 1;
-                                    } else {
-                                        test = net.dominanceQuery(to, o);
-                                        if (test) {
-                                            ben_list[1] += 1;
-                                        } else {
-                                            ben_list[2] += 1;
-                                        }
-                                    }
                                 }
                             }
                             tCount += 1;
                         }
+                        //if( (ben_list[2] < 0.75*(ben_list[0]+ben_list[1]+ben_list[2])) && (mal_list[2] < 0.75*(mal_list[0]+mal_list[1]+mal_list[2]))){
                         mal_compare.put(o, mal_list);
                         ben_compare.put(o, ben_list);
                         count += 1;
+                        //}
                     }
+
+                    //outcomes = new EventOutcome[mal_compare.size()];
+                    //mal_compare.keySet().toArray(outcomes);
 
 
                     ArrayList<EventOutcome> mal_predictions = new ArrayList<>();
@@ -226,26 +216,37 @@ public class TestingDriverDominance {
                         logWriter.write("\n");
                         logWriter.write("Mal Beat: " + mal_compare.get(o)[0] + " (" + ((float) mal_compare.get(o)[0] / 256) + ")");
                         logWriter.write("\n");
-                        score += 1*((float) mal_compare.get(o)[0] / 256);
+                        //score += 1*((float) mal_compare.get(o)[0] / 256);
+                        if((mal_compare.get(o)[0] + mal_compare.get(o)[1] + mal_compare.get(o)[3]) != 0)
+                            score += 1*((float) mal_compare.get(o)[0] / (mal_compare.get(o)[0] + mal_compare.get(o)[1] + mal_compare.get(o)[3]) );
                         logWriter.write("Mal Lost: " + mal_compare.get(o)[1] + " (" + ((float) mal_compare.get(o)[1] / 256) + ")");
                         logWriter.write("\n");
-                        score -= ((float) mal_compare.get(o)[1] / 256);
+                        //score -= ((float) mal_compare.get(o)[1] / 256);
+                        if((mal_compare.get(o)[0] + mal_compare.get(o)[1] + mal_compare.get(o)[3]) != 0)
+                            score -= ((float) mal_compare.get(o)[1] / (mal_compare.get(o)[0] + mal_compare.get(o)[1] + mal_compare.get(o)[3]) );
                         logWriter.write("Mal Indifferent: " + mal_compare.get(o)[2] + " (" + ((float) mal_compare.get(o)[2] / 256) + ")");
                         logWriter.write("\n");
                         logWriter.write("Mal Equals Exact: " + mal_compare.get(o)[3] + " (" + ((float) mal_compare.get(o)[3] / 256) + ")");
                         logWriter.write("\n");
-                        score += 1*((float) mal_compare.get(o)[3] / 256);
+                        if((mal_compare.get(o)[0] + mal_compare.get(o)[1] + mal_compare.get(o)[3]) != 0)
+                            score += ((float) mal_compare.get(o)[3] / (mal_compare.get(o)[0] + mal_compare.get(o)[1] + mal_compare.get(o)[3]));
                         logWriter.write("Ben Beat: " + ben_compare.get(o)[0] + " (" + ((float) ben_compare.get(o)[0] / 55) + ")");
                         logWriter.write("\n");
-                        score += ((float) ben_compare.get(o)[0] / 55);
+                        //score += ((float) ben_compare.get(o)[0] / 55);
+                        if((ben_compare.get(o)[0] + ben_compare.get(o)[1] + ben_compare.get(o)[3]) != 0)
+                            score += ((float) ben_compare.get(o)[0] / (ben_compare.get(o)[0] + ben_compare.get(o)[1] + ben_compare.get(o)[3]));
                         logWriter.write("Ben Lost: " + ben_compare.get(o)[1] + " (" + ((float) ben_compare.get(o)[1] / 55) + ")");
                         logWriter.write("\n");
-                        score -= 1*((float) ben_compare.get(o)[1] / 55);
+                        //score -= 1*((float) ben_compare.get(o)[1] / 55);
+                        if((ben_compare.get(o)[0] + ben_compare.get(o)[1] + ben_compare.get(o)[3]) != 0)
+                            score -= 1*((float) ben_compare.get(o)[1] / (ben_compare.get(o)[0] + ben_compare.get(o)[1] + ben_compare.get(o)[3]));
                         logWriter.write("Ben Indifferent: " + ben_compare.get(o)[2] + " (" + ((float) ben_compare.get(o)[2] / 55) + ")");
                         logWriter.write("\n");
                         logWriter.write("Ben Equals Exact: " + ben_compare.get(o)[3] + " (" + ((float) ben_compare.get(o)[3] / 55) + ")");
                         logWriter.write("\n");
-                        score -= 1*((float) ben_compare.get(o)[3] / 55);
+                        //score -= 1*((float) ben_compare.get(o)[3] / 55);
+                        if((ben_compare.get(o)[0] + ben_compare.get(o)[1] + ben_compare.get(o)[3]) != 0)
+                            score -= 1*((float) ben_compare.get(o)[3] / (ben_compare.get(o)[0] + ben_compare.get(o)[1] + ben_compare.get(o)[3]));
                         logWriter.write("\n");
                         if (score > 0) {
                             mal_predictions.add(o);
@@ -293,9 +294,13 @@ public class TestingDriverDominance {
                         logWriter.write("\n");
                     }
                     double average_indifference = 0;
-                    average_indifference += (((float) total_mals[2] / outcomes.length) / (float) (total_mals[0] / outcomes.length + total_mals[1] / outcomes.length + total_mals[2] / outcomes.length)) * ((float) (total_mals[0] / outcomes.length + total_mals[1] / outcomes.length + total_mals[2] / outcomes.length)) / (trainingOutcomes.length);
-                    average_indifference += (((float) total_bens[2] / outcomes.length) / (float) (total_bens[0] / outcomes.length + total_bens[1] / outcomes.length + total_bens[2] / outcomes.length)) * ((float) (total_bens[0] / outcomes.length + total_bens[1] / outcomes.length + total_bens[2] / outcomes.length)) / trainingOutcomes.length;
-
+                    if(outcomes.length != 0) {
+                        average_indifference += (((float) total_mals[2] / outcomes.length) / (float) (total_mals[0] / outcomes.length + total_mals[1] / outcomes.length + total_mals[2] / outcomes.length)) * ((float) (total_mals[0] / outcomes.length + total_mals[1] / outcomes.length + total_mals[2] / outcomes.length)) / (trainingOutcomes.length);
+                        average_indifference += (((float) total_bens[2] / outcomes.length) / (float) (total_bens[0] / outcomes.length + total_bens[1] / outcomes.length + total_bens[2] / outcomes.length)) * ((float) (total_bens[0] / outcomes.length + total_bens[1] / outcomes.length + total_bens[2] / outcomes.length)) / trainingOutcomes.length;
+                    }
+                    else{
+                        average_indifference = 1;
+                    }
                     for (int j = 0; j < net.nodes.length; j++) {
                         if (net.getChildren(net.nodes[j]).length == 0) {
                             childless += 1;

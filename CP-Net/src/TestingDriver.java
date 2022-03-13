@@ -9,14 +9,14 @@ public class TestingDriver {
 
     static Boolean[] b1 = {true,false};
     static Boolean[] b2 = {false,true};
-    static double[] support_list = {0.7,0.6,0.5,0.4,0.3,0.2,0.1};
-    static double[] conditional_support_list = {0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1};
+    static double[] support_list = {0.3,0.25,0.2,0.15,0.1,0.05};
+    static double[] conditional_support_list = {0.8,0.75,0.7,0.65,0.6,0.55,0.5,0.45,0.4,0.35,0.3,0.25,0.2,0.15,0.1,0.05};
     static int max_length = 1;
 
     public static void main(String[] args) throws Exception{
         for(double support : support_list) {
             for (double conditional_support : conditional_support_list) {
-                String mainOutputFolder = "../Output/s" + Integer.toString((int) (support * 100)) + "c" + Integer.toString((int) (conditional_support * 100)) + "l" + max_length + "_cycle3";
+                String mainOutputFolder = "../Output/s" + Integer.toString((int) (support * 100)) + "c" + Integer.toString((int) (conditional_support * 100)) + "l" + max_length + "_cycle1_method1";
                 FileWriter myWriter = new FileWriter(mainOutputFolder + "_output.txt");
                 myWriter.write("Unconditional Support, Conditional Support, Max Length, Node Count, Average Connection, Parentless, Childless, Diff Count, Diff Score, Accuracy, Percision, Recall, Average Indifference\n");
                 for (int folderNum = 0; folderNum < 5; folderNum++) {
